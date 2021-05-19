@@ -28,4 +28,16 @@ namespace AABB_Collisions
         }
     }
 
+    public struct Pair
+    {
+        Rigidbody a;
+        Rigidbody b;
+
+        public Pair(Rigidbody a, Rigidbody b)
+        {
+            this.a = a;
+            this.b = b;
+        }
+    }
+
 }

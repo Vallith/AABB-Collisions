@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AABB_Collisions
 {
@@ -98,6 +99,19 @@ namespace AABB_Collisions
 
             while (accumulator > dt)
             {
+/*                for (int i = 0; i < RigidbodyStorage.objectList.Count; i++)
+                {
+                    Rigidbody A = RigidbodyStorage.objectList.ElementAt(i).Key;
+
+                    for (int j = 0; j < RigidbodyStorage.objectList.Count; j++)
+                    {
+                        Rigidbody B = RigidbodyStorage.objectList.ElementAt(j).Key;
+                        if (A.massData.inverseMass == 0 && B.massData.inverseMass == 0)
+                            continue;
+
+                        Manifold
+                    }
+                }*/
                 foreach (var rb in RigidbodyStorage.objectList.Keys)
                 {
                     rb.CalculateForce();
