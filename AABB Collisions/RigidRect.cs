@@ -13,7 +13,7 @@ namespace AABB_Collisions
         public float height;
         float angle;
 
-        public RigidRect(Vector2 pos, float width, float height, float mass, float angle, float restitution, Color color) : base(pos, mass, restitution, color)
+        public RigidRect(Vector2 pos, float width, float height, float mass, float angle, float restitution, Color color, bool useGravity = true) : base(pos, mass, restitution, color, useGravity)
         {
             this.width = width;
             this.height = height;

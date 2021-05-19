@@ -10,12 +10,13 @@ namespace AABB_Collisions
     {
 
         public float inverseMass;
+        public float mass;
 
         public AABB aabb;
 
         public float restitution;
 
-        const float gravity = 80;
+        float gravity = 80;
         public bool useGravity = true;
 
         public Color color;
@@ -23,18 +24,13 @@ namespace AABB_Collisions
         public Vector2 pos;
         public Vector2 vel;
 
-        public float Mass
-        {
-            get { return 1f / inverseMass; }
-            set { inverseMass = 1f / value; }
-        }
-
-
-        public Rigidbody(Vector2 pos, float mass, float restitution, Color color)
+        public Rigidbody(Vector2 pos, float mass, float restitution, Color color, bool useGravity = true)
         {
             this.pos = pos;
             this.restitution = restitution;
             inverseMass = mass == 0 ? 0 : 1 / mass;
+            gravity = useGravity == true ? gravity : 0;
+            this.mass = mass;
             this.color = color;
         }
 
@@ -44,11 +40,10 @@ namespace AABB_Collisions
 
         public abstract Texture2D CreateTexture(Color color);
 
-
         public void Update(float dt)
         {
             Vector2 force = CalculateForce();
-            Vector2 acceleration = new Vector2(force.X / Mass, force.Y / Mass);
+            Vector2 acceleration = new Vector2(force.X * inverseMass, force.Y * inverseMass);
 
             vel += acceleration * dt;
             pos += vel * dt;
@@ -66,7 +61,7 @@ namespace AABB_Collisions
 
         public Vector2 CalculateForce()
         {
-            return new Vector2(0, 1 / inverseMass * gravity);
+            return new Vector2(0, mass * gravity);
         }
 
     }

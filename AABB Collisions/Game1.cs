@@ -8,6 +8,9 @@ namespace AABB_Collisions
 {
     public class Game1 : Game
     {
+        // TODO:
+        // Positional Correction once Manifolds are implemented
+
 
         public static Game1 instance;
 
@@ -19,9 +22,11 @@ namespace AABB_Collisions
 
         public Circle circleA;
         public Circle circleB;
+        public Circle circleC;
 
         public Texture2D circleATexture;
         public Texture2D circleBTexture;
+        public Texture2D circleCTexture;
 
         public RigidRect square;
 
@@ -43,14 +48,15 @@ namespace AABB_Collisions
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.ApplyChanges();
             
-            circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 3, 0.5f, Color.Red));
+            //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(600 - 60, 400), 90, 9, 0.5f, Color.Green));
+            circleC = RigidbodyStorage.Create(new Circle(new Vector2(400, 700), 100, 0, 0.7f, Color.Beige));
             square = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 200), 80, 40, 8, 0, 0.5f, Color.Black));
 
-            circleA.SetVelocity(50, 0);
+            //circleA.SetVelocity(50, 0);
             circleB.SetVelocity(-50, 0);
 
-            System.Console.WriteLine(circleA.vel);
+            //System.Console.WriteLine(circleA.vel);
             System.Console.WriteLine(circleB.vel);
 
             base.Initialize();
@@ -74,11 +80,11 @@ namespace AABB_Collisions
                 rb.Update(deltaTime);
             }
 
-            if (CollisionUtil.CirclevsCircleUnoptimized(circleA, circleB))
+            if (CollisionUtil.CirclevsCircleUnoptimized(circleC, circleB))
             {
                 System.Console.WriteLine("collided");
-                CollisionUtil.ResolveCollision(circleA, circleB);
-                System.Console.WriteLine(circleA.vel);
+                CollisionUtil.ResolveCollision(circleC, circleB);
+                //System.Console.WriteLine(circleA.vel);
                 System.Console.WriteLine(circleB.vel);
             }
 

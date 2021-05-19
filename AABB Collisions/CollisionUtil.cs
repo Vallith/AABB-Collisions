@@ -16,16 +16,47 @@ namespace AABB_Collisions
             return r > d;
         }
 
-        public static bool CircleVCircle(Circle a, Circle b)
+        // This is called when the program loops over every object and decides to test a collision, and only THEN is the Manifold generated between
+        // 2 potentially colliding objects.
+        public static bool CircleVsCircle(Manifold<Circle> m)
         {
-            float r = a.radius + b.radius;
-            r *= r;
-            float aPosX = a.pos.X;
-            float aPosY = a.pos.Y;
-            float bPosX = b.pos.X;
-            float bPosY = b.pos.Y;
+            Circle a = m.objectA;
+            Circle b = m.objectB;
 
-            return r < (aPosX + bPosX) * (aPosX + bPosX) + (aPosY + bPosY) * (aPosY + bPosY);
+            // Normal vector for 2 circles colliding is just the vector from A to B.
+            Vector2 normal = b.pos - a.pos;
+
+            float radiusSum = a.radius + b.radius;
+            radiusSum *= radiusSum;
+
+            // If the normal is longer than the radiusSum
+            if (normal.LengthSquared() > radiusSum)
+                // Then we aren't colliding
+                return false;
+
+            // Circles have collided, now compute manifold
+            float dist = normal.Length();
+
+            // If distance between circles is not zero (If they're not in the same position)
+            if (dist != 0)
+            {
+                // Penetration distance is difference between radius and distance
+                m.penetration = radiusSum - dist;
+
+                // Points from A to B, and is a unit vector
+                // NOT SURE ON THIS PART, TYPO IN GUIDE?
+                m.normal = normal / dist;
+                return true;
+            }
+            // Circles are in the same position
+            else
+            {
+                // Choose random (but consistent) values
+                m.penetration = a.radius;
+                m.normal = new Vector2(1, 0);
+                return true;
+            }
+
         }
 
         public static void ResolveCollision(Circle a, Circle b)
