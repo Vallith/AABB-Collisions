@@ -9,28 +9,29 @@ namespace AABB_Collisions
     public abstract class Rigidbody
     {
 
-        public float inverseMass;
-        public float mass;
-
         public AABB aabb;
+
+        public MassData massData;
 
         public float restitution;
 
-        float gravity = 80;
+        static float gravity = 80;
+        public float gravityScale = 1;
         public bool useGravity = true;
 
         public Color color;
 
         public Vector2 pos;
         public Vector2 vel;
+        public Vector2 force;
 
-        public Rigidbody(Vector2 pos, float mass, float restitution, Color color, bool useGravity = true)
+
+        public Rigidbody(Vector2 pos, MassData massData, float restitution, Color color, bool useGravity = true, float gravityScale = 1)
         {
             this.pos = pos;
+            this.massData = massData;
             this.restitution = restitution;
-            inverseMass = mass == 0 ? 0 : 1 / mass;
-            gravity = useGravity == true ? gravity : 0;
-            this.mass = mass;
+            this.gravityScale = useGravity == true ? gravityScale : 0;
             this.color = color;
         }
 
@@ -42,8 +43,7 @@ namespace AABB_Collisions
 
         public void Update(float dt)
         {
-            Vector2 force = CalculateForce();
-            Vector2 acceleration = new Vector2(force.X * inverseMass, force.Y * inverseMass);
+            Vector2 acceleration = new Vector2(force.X * massData.inverseMass, force.Y * massData.inverseMass);
 
             vel += acceleration * dt;
             pos += vel * dt;
@@ -59,9 +59,13 @@ namespace AABB_Collisions
             Game1.instance._spriteBatch.DrawLine(pos, pos + vel, Color.White, 1);
         }
 
-        public Vector2 CalculateForce()
+        public void CalculateForce(params Vector2[] forces)
         {
-            return new Vector2(0, mass * gravity);
+            force += Vector2.UnitY * (massData.mass * gravity);
+            foreach (var item in forces)
+            {
+                force += item;
+            }
         }
 
     }

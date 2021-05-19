@@ -11,6 +11,12 @@ namespace AABB_Collisions
         // TODO:
         // Positional Correction once Manifolds are implemented
 
+        const float fps = 100;
+        const float dt = 1 / fps;
+        float accumulator = 0;
+
+        float frameStart;
+        float currentTime;
 
         public static Game1 instance;
 
@@ -28,9 +34,9 @@ namespace AABB_Collisions
         public Texture2D circleBTexture;
         public Texture2D circleCTexture;
 
-        public RigidRect square;
+        //public RigidRect square;
 
-        public Texture2D squareTexture;
+        //public Texture2D squareTexture;
 
         public Game1()
         {
@@ -47,14 +53,16 @@ namespace AABB_Collisions
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.ApplyChanges();
-            
+
+            _graphics.SynchronizeWithVerticalRetrace = false;
+
             //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
-            circleB = RigidbodyStorage.Create(new Circle(new Vector2(600 - 60, 400), 90, 9, 0.5f, Color.Green));
-            circleC = RigidbodyStorage.Create(new Circle(new Vector2(400, 700), 100, 0, 0.7f, Color.Beige));
-            square = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 200), 80, 40, 8, 0, 0.5f, Color.Black));
+            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, new MassData(3), 0.9f, Color.Green));
+            circleC = RigidbodyStorage.Create(new Circle(new Vector2(400, 700), 100, new MassData(0), 0.7f, Color.Beige));
+            //square = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 200), 80, 40, 8, 0, 0.5f, Color.Black));
 
             //circleA.SetVelocity(50, 0);
-            circleB.SetVelocity(-50, 0);
+            //circleB.SetVelocity(0, 100);
 
             //System.Console.WriteLine(circleA.vel);
             System.Console.WriteLine(circleB.vel);
@@ -71,40 +79,68 @@ namespace AABB_Collisions
 
         protected override void Update(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
+
+
+            // Store the time elapsed since the last frame began
+            accumulator += currentTime - frameStart;
+
+            // Record the starting of this frame
+            frameStart = currentTime;
+
+            // Avoid spiral of death and clamp dt, thus clamping
+            // how many times the UpdatePhysics can be
+            // called in a single game loop.
+            if (accumulator > 0.2f)
+                accumulator = 0.2f;
+
+
+            while (accumulator > dt)
+            {
+                foreach (var rb in RigidbodyStorage.objectList.Keys)
+                {
+                    rb.CalculateForce();
+                    rb.Update(dt);
+                    rb.force = new Vector2(0, 0);
+                }
+                if (CollisionUtil.CirclevsCircleUnoptimized(circleC, circleB))
+                {
+                    System.Console.WriteLine("collided");
+                    CollisionUtil.ResolveCollision(circleC, circleB);
+                    //System.Console.WriteLine(circleA.vel);
+                    System.Console.WriteLine(circleB.vel);
+                }
+
+                accumulator -= dt;
+            }
+
+            float alpha = accumulator / dt;
+
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            foreach (var rb in RigidbodyStorage.objectList.Keys)
-            {
-                rb.Update(deltaTime);
-            }
-
-            if (CollisionUtil.CirclevsCircleUnoptimized(circleC, circleB))
-            {
-                System.Console.WriteLine("collided");
-                CollisionUtil.ResolveCollision(circleC, circleB);
-                //System.Console.WriteLine(circleA.vel);
-                System.Console.WriteLine(circleB.vel);
-            }
-
+            DrawGame(gameTime, alpha);
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected void DrawGame(GameTime gameTime, float alpha)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
             foreach (var element in RigidbodyStorage.objectList)
             {
+                
                 element.Key.Draw(element.Value);
                 element.Key.DrawVelocityVector();
             }
             _spriteBatch.End();
             // TODO: Add your drawing code here
 
-            base.Draw(gameTime);
+            //base.Draw(gameTime);
         }
 
 

@@ -10,7 +10,7 @@ namespace AABB_Collisions
     {
         public float radius;
 
-        public Circle(Vector2 pos, float radius, float mass, float restitution, Color color, bool useGravity = true) : base(pos, mass, restitution, color, useGravity)
+        public Circle(Vector2 pos, float radius, MassData massData, float restitution, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, massData, restitution, color, useGravity, gravityScale)
         {
             this.radius = radius;
         }
