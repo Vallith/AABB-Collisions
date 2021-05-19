@@ -9,9 +9,17 @@ namespace AABB_Collisions
     public abstract class Rigidbody
     {
 
+        public enum ShapeType
+        {
+            Circle = 0,
+            AABB = 1
+        };
+
         public AABB aabb;
 
         public MassData massData;
+
+        public ShapeType shape;
 
         public float restitution;
 
@@ -28,11 +36,13 @@ namespace AABB_Collisions
 
         public Rigidbody(Vector2 pos, MassData massData, float restitution, Color color, bool useGravity = true, float gravityScale = 1)
         {
+            aabb = new AABB();
             this.pos = pos;
             this.massData = massData;
             this.restitution = restitution;
             this.gravityScale = useGravity == true ? gravityScale : 0;
             this.color = color;
+            RecalculateAABB();
         }
 
         public abstract void RecalculateAABB();
@@ -44,9 +54,9 @@ namespace AABB_Collisions
         public void Update(float dt)
         {
             Vector2 acceleration = new Vector2(force.X * massData.inverseMass, force.Y * massData.inverseMass);
-
             vel += acceleration * dt;
             pos += vel * dt;
+
         }
 
         public void SetVelocity(float x, float y)
@@ -59,9 +69,19 @@ namespace AABB_Collisions
             Game1.instance._spriteBatch.DrawLine(pos, pos + vel, Color.White, 1);
         }
 
+        public void DrawAABB()
+        {
+            Game1.instance._spriteBatch.DrawPoint(aabb.max, Color.Red, 10);
+            Game1.instance._spriteBatch.DrawPoint(aabb.min, Color.Blue, 10);
+            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.max.X, aabb.min.Y), Color.Red);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.max.X, aabb.min.Y), aabb.max, Color.Red);
+            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.min.X, aabb.max.Y), Color.Red);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max, Color.Red);
+        }
+
         public void CalculateForce(params Vector2[] forces)
         {
-            force += Vector2.UnitY * (massData.mass * gravity);
+            force += Vector2.UnitY * (massData.mass * (gravity * gravityScale));
             foreach (var item in forces)
             {
                 force += item;

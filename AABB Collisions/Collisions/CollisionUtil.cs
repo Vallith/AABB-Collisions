@@ -18,10 +18,11 @@ namespace AABB_Collisions
 
         // This is called when the program loops over every object and decides to test a collision, and only THEN is the Manifold generated between
         // 2 potentially colliding objects.
-        public static bool CircleVsCircle(Manifold<Circle, Circle> m)
+        public static bool CircleVsCircle(Manifold m)
         {
-            Circle a = m.objectA;
-            Circle b = m.objectB;
+            Console.WriteLine("CircleVsCircle");
+            Circle a = (Circle)m.objectA;
+            Circle b = (Circle)m.objectB;
 
             // Normal vector for 2 circles colliding is just the vector from A to B.
             Vector2 normal = b.pos - a.pos;
@@ -60,10 +61,11 @@ namespace AABB_Collisions
         }
 
         // RigidRect will eventually become Polygon
-        public static bool AABBvsAABB(Manifold<RigidRect, RigidRect> m)
+        public static bool AABBvsAABB(Manifold m)
         {
-            RigidRect a = m.objectA;
-            RigidRect b = m.objectB;
+            //Console.WriteLine("AABBvsAABB");
+            RigidRect a = (RigidRect)m.objectA;
+            RigidRect b = (RigidRect)m.objectB;
 
             // Vector from A to B
             Vector2 n = b.pos - a.pos;
@@ -119,10 +121,11 @@ namespace AABB_Collisions
             return false;
         }
 
-        public static bool AABBvsCircle(Manifold<RigidRect, Circle> m)
+        public static bool AABBvsCircle(Manifold m)
         {
-            RigidRect a = m.objectA;
-            Circle b = m.objectB;
+            //Console.WriteLine("AABBvsCircle");
+            RigidRect a = (RigidRect)m.objectB;
+            Circle b = (Circle)m.objectA;
 
             // Vector from A to B
             Vector2 n = b.pos - a.pos;
@@ -194,12 +197,12 @@ namespace AABB_Collisions
             return true;
         }
 
-        public static void ResolveCollision(Circle a, Circle b)
+        public static void ResolveCollision(Rigidbody a, Rigidbody b)
         {
             // Calculate relativeVelocity
             Vector2 relativeVelocity = b.vel - a.vel;
 
-            Vector2.Normalize(ref relativeVelocity, out normal);
+            Extensions.Vector2Normalise(relativeVelocity, out normal);            
 
             // Calculate relativeVelocity in terms of the normal direction
             float velAlongNormal = Vector2.Dot(relativeVelocity, normal);
@@ -218,9 +221,21 @@ namespace AABB_Collisions
             // Apply impulse
             Vector2 impulse = j * normal;
 
+            Vector2 backupA = a.vel;
+            Vector2 backupB = b.vel;
+
+            if (float.IsNaN(a.vel.Y))
+            {
+
+            }
+
             a.vel -= a.massData.inverseMass * impulse;
             b.vel += b.massData.inverseMass * impulse;
 
+            if (float.IsNaN(a.vel.Y))
+            {
+
+            }
         }
 
     }

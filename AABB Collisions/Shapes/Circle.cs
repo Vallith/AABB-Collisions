@@ -13,6 +13,7 @@ namespace AABB_Collisions
         public Circle(Vector2 pos, float radius, MassData massData, float restitution, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, massData, restitution, color, useGravity, gravityScale)
         {
             this.radius = radius;
+            shape = ShapeType.Circle;
         }
 
         public override void Draw(Texture2D texture)

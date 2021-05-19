@@ -19,6 +19,7 @@ namespace AABB_Collisions
             this.height = height;
             this.angle = angle;
             this.color = color;
+            this.shape = ShapeType.AABB;
         }
 
         public override Texture2D CreateTexture(Color color)
