@@ -30,6 +30,7 @@ namespace AABB_Collisions
 
         private GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
+        public SpriteFont defaultFont;
 
         public Circle circleA;
         public Circle circleB;
@@ -60,11 +61,11 @@ namespace AABB_Collisions
 
             //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, new MassData(6), 0.9f, Color.Green));
-            square = RigidbodyStorage.Create(new RigidRect(new Vector2(310, 50), 80, 40, new MassData(6), 0, 0.5f, Color.Black));
+            square = RigidbodyStorage.Create(new RigidRect(new Vector2(250, 50), 80, 40, new MassData(6), 0, 0.5f, Color.Blue));
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, new MassData(0), 0, 0.5f, Color.Black));
 
             //circleA.SetVelocity(50, 0);
-            //circleB.SetVelocity(0, 100);
+            //circleB.SetVelocity(0, 500);
             //circleC.SetVelocity(0, -600);
 
             base.Initialize();
@@ -73,10 +74,11 @@ namespace AABB_Collisions
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            defaultFont = Content.Load<SpriteFont>("DefaultFont");
             // TODO: use this.Content to load your game content here
         }
         bool spaceWasPressed;
+        bool fWasPressed;
         protected override void Update(GameTime gameTime)
         {
 
@@ -125,6 +127,7 @@ namespace AABB_Collisions
 
                             Manifold m = new Manifold(A, B);
                             m.Solve();
+                            m.PositionalCorrection();
                         }
                     }
                     canStep = false;
@@ -135,9 +138,14 @@ namespace AABB_Collisions
             float alpha = accumulator / dt;
             
 
-            if (Keyboard.GetState().IsKeyDown(Keys.F))
+            if (Keyboard.GetState().IsKeyDown(Keys.F) && fWasPressed == false)
             {
+                fWasPressed = true;
                 frameSteppingActive = !frameSteppingActive;
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.F))
+            {
+                fWasPressed = false;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && spaceWasPressed == false)
@@ -156,12 +164,12 @@ namespace AABB_Collisions
             DrawGame(gameTime, alpha);
             base.Update(gameTime);
         }
-
         protected void DrawGame(GameTime gameTime, float alpha)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
+            _spriteBatch.DrawString(defaultFont, $"{Mouse.GetState().Position}", new Vector2(20, 20), Color.Black);
             foreach (var element in RigidbodyStorage.objectList)
             {
                 

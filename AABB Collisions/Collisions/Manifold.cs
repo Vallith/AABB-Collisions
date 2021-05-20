@@ -9,8 +9,8 @@ namespace AABB_Collisions
     public class Manifold
     {
         // CircleVsCircle = 0, 0
-        // AABBvsAABB =     0, 1
-        // AABBvsCircle =   1, 0
+        // AABBvsCircle =   0, 1
+        // AABBvsAABB =     1, 0
 
         static Func<Manifold, bool>[][] collisionMethods = new Func<Manifold, bool>[2][]
         {
@@ -38,10 +38,18 @@ namespace AABB_Collisions
             bool result = collisionMethods[(int)objectA.shape][(int)objectB.shape](this);
             if (result)
             {
-
                 CollisionUtil.ResolveCollision(objectA, objectB);
             }
-            Console.WriteLine(result);
+        }
+
+        public void PositionalCorrection()
+        {
+            const float percentage = 0.2f; // Penetration percentage to correct
+            const float slop = 0.01f;
+            Extensions.Vector2Normalise(normal, out normal);
+            Vector2 correction = new Vector2(0, Math.Max(penetration - slop, 0.0f) / (objectA.massData.inverseMass + objectB.massData.inverseMass)) * percentage * normal;
+            objectA.pos += objectA.massData.inverseMass * correction;
+            objectB.pos -= objectB.massData.inverseMass * correction;
         }
 
     }

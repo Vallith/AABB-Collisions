@@ -94,7 +94,7 @@ namespace AABB_Collisions
                 if (yOverlap > 0)
                 {
                     // Find out which axis is axis of least penetration
-                    if (xOverlap > yOverlap)
+                    if (xOverlap < yOverlap)
                     {
                         // Point towards B knowing that n points from A to B
                         if (n.X < 0)
@@ -108,7 +108,7 @@ namespace AABB_Collisions
                     else
                     {
                         // Point towards B knowing that N points from B to A
-                        if (n.Y < 0)
+                        if (n.Y > 0)
                             m.normal = new Vector2(0, -1);
                         else
                             m.normal = new Vector2(0, 1);
@@ -205,10 +205,10 @@ namespace AABB_Collisions
             Extensions.Vector2Normalise(relativeVelocity, out normal);            
 
             // Calculate relativeVelocity in terms of the normal direction
-            float velAlongNormal = Vector2.Dot(relativeVelocity, normal);
+            float velAlongNormal = Extensions.Vector2Dot(relativeVelocity, normal);
 
             // If velocities are separating
-            if (velAlongNormal < 0) 
+            if (velAlongNormal <= 0) 
                 return;
 
             // Take min restitution out of 2 circles
@@ -221,21 +221,8 @@ namespace AABB_Collisions
             // Apply impulse
             Vector2 impulse = j * normal;
 
-            Vector2 backupA = a.vel;
-            Vector2 backupB = b.vel;
-
-            if (float.IsNaN(a.vel.Y))
-            {
-
-            }
-
             a.vel -= a.massData.inverseMass * impulse;
             b.vel += b.massData.inverseMass * impulse;
-
-            if (float.IsNaN(a.vel.Y))
-            {
-
-            }
         }
 
     }
