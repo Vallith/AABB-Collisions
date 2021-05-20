@@ -16,7 +16,7 @@ namespace AABB_Collisions
             {
                 float invLen = 1.0f / len;
                 vec2.X *= invLen;
-                vec2.Y *= invLen;
+                vec2.Y = vec2.Y * invLen;
             }
             vec2Out = vec2;
         }

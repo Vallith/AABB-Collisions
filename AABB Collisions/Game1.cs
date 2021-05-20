@@ -60,8 +60,8 @@ namespace AABB_Collisions
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
-            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, new MassData(6), 0.9f, Color.Green));
-            square = RigidbodyStorage.Create(new RigidRect(new Vector2(250, 50), 80, 40, new MassData(6), 0, 0.5f, Color.Blue));
+            //circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, new MassData(6), 0.5f, Color.Green));
+            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, new MassData(6), 0, 0.5f, Color.Blue));
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, new MassData(0), 0, 0.5f, Color.Black));
 
             //circleA.SetVelocity(50, 0);
@@ -108,13 +108,7 @@ namespace AABB_Collisions
 
                 if (canStep)
                 {
-                    foreach (var rb in RigidbodyStorage.objectList.Keys)
-                    {
-                        rb.CalculateForce();
-                        rb.RecalculateAABB();
-                        rb.Update(dt);
-                        rb.force = new Vector2(0, 0);
-                    }
+
                     for (int i = 0; i < RigidbodyStorage.objectList.Count; i++)
                     {
                         Rigidbody A = RigidbodyStorage.objectList.ElementAt(i).Key;
@@ -127,8 +121,14 @@ namespace AABB_Collisions
 
                             Manifold m = new Manifold(A, B);
                             m.Solve();
-                            m.PositionalCorrection();
                         }
+                    }
+                    foreach (var rb in RigidbodyStorage.objectList.Keys)
+                    {
+                        rb.CalculateForce();
+                        rb.RecalculateAABB();
+                        rb.Update(dt);
+                        rb.force = new Vector2(0, 0);
                     }
                     canStep = false;
                 }

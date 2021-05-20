@@ -193,7 +193,7 @@ namespace AABB_Collisions
                 m.normal = n;
                 m.penetration = r - dist;
             }
-
+            Extensions.Vector2Normalise(m.normal, out m.normal);
             return true;
         }
 
@@ -208,7 +208,7 @@ namespace AABB_Collisions
             float velAlongNormal = Extensions.Vector2Dot(relativeVelocity, normal);
 
             // If velocities are separating
-            if (velAlongNormal <= 0) 
+            if (velAlongNormal < 0) 
                 return;
 
             // Take min restitution out of 2 circles
