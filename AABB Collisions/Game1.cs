@@ -47,6 +47,8 @@ namespace AABB_Collisions
 
         public Texture2D squareTexture;
 
+        public Rigidbody selectedShape;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -66,12 +68,12 @@ namespace AABB_Collisions
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
-            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], Color.Green));
-            //square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], Color.Blue));
-            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], Color.Black));
+            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], new Color(85, 158, 89)), "Circle B");
+            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], new Color(41, 110, 143)), "Square");
+            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)));
 
             //circleA.SetVelocity(50, 0);
-            circleB.SetVelocity(0, 1000);
+            //circleB.SetVelocity(0, 1000);
             //circleC.SetVelocity(0, -600);
 
             base.Initialize();
@@ -83,11 +85,10 @@ namespace AABB_Collisions
             defaultFont = Content.Load<SpriteFont>("DefaultFont");
             // TODO: use this.Content to load your game content here
         }
-        bool spaceWasPressed;
-        bool fWasPressed;
+
         protected override void Update(GameTime gameTime)
         {
-
+            Input.Process();
             currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
 
@@ -145,24 +146,14 @@ namespace AABB_Collisions
             float alpha = accumulator / dt;
             
 
-            if (Keyboard.GetState().IsKeyDown(Keys.F) && fWasPressed == false)
+            if (Input.IsPressed(Keys.F))
             {
-                fWasPressed = true;
                 frameSteppingActive = !frameSteppingActive;
             }
-            else if (Keyboard.GetState().IsKeyUp(Keys.F))
-            {
-                fWasPressed = false;
-            }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && spaceWasPressed == false)
+            if (Input.IsPressed(Keys.Space))
             {
-                spaceWasPressed = true;
                 canStep = true;
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Space))
-            {
-                spaceWasPressed = false;
             }
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -173,21 +164,35 @@ namespace AABB_Collisions
         }
         protected void DrawGame(GameTime gameTime, float alpha)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(111, 177, 199));
 
             _spriteBatch.Begin();
+
             _spriteBatch.DrawString(defaultFont, $"{Mouse.GetState().Position}", new Vector2(20, 20), Color.Black);
             foreach (var element in RigidbodyStorage.objectList)
             {
-                
+                   
                 element.Key.Draw(element.Value);
                 element.Key.DrawVelocityVector();
-                element.Key.DrawAABB();
+                //element.Key.DrawAABB();
+                if (Input.IsPressed(MouseButton.LeftButton))
+                {
+                    Point mousePoint = Mouse.GetState().Position;
+                    foreach (var item in RigidbodyStorage.objectList.Keys)
+                    {
+                        if (item.aabb.IsInside(Util.PointToVector2(mousePoint)))
+                        {
+                            selectedShape = item;
+                        }
+                    }
+                }
+                if (selectedShape != null)
+                {
+                    _spriteBatch.DrawString(defaultFont, selectedShape.ToString(true), new Vector2(20, 50), Color.Black);
+                    selectedShape.DrawOutline();
+                }
             }
             _spriteBatch.End();
-            // TODO: Add your drawing code here
-
-            //base.Draw(gameTime);
         }
 
 

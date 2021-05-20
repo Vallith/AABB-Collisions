@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Users/Jack Allpike/source/repos/Git Repositories/AABB Collisions/AABB Collisions/Content/DefaultFont.spritefont</SourceFile>
-  <SourceTime>2020-08-10T16:17:28+08:00</SourceTime>
+  <SourceTime>2021-05-20T17:25:28.2023851+08:00</SourceTime>
   <DestFile>C:/Users/Jack Allpike/source/repos/Git Repositories/AABB Collisions/AABB Collisions/Content/bin/DesktopGL/Content/DefaultFont.xnb</DestFile>
-  <DestTime>2021-05-20T11:51:35.0818832+08:00</DestTime>
+  <DestTime>2021-05-20T17:26:54.3258688+08:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+08:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

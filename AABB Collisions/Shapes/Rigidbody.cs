@@ -8,12 +8,19 @@ namespace AABB_Collisions
 {
     public abstract class Rigidbody
     {
+        public Color InvertedColor
+        {
+            get { return new Color(255 - (int)color.R, 255 - (int)color.G, 255 - (int)color.B); }
+        }
+
 
         public enum ShapeType
         {
             Circle = 0,
             AABB = 1
         };
+
+        public string name;
 
         public AABB aabb;
 
@@ -27,6 +34,7 @@ namespace AABB_Collisions
         public float gravityScale = 1;
         public bool useGravity = true;
 
+        public static int outlineWidth = 3;
         public Color color;
 
         public Vector2 pos;
@@ -51,7 +59,7 @@ namespace AABB_Collisions
         public abstract Texture2D CreateTexture(Color color);
 
         public abstract void CalculateMass(float density);
-
+        public abstract void DrawOutline();
 
         public void Update(float dt)
         {
@@ -88,6 +96,12 @@ namespace AABB_Collisions
             {
                 force += item;
             }
+        }
+
+
+        public string ToString(bool full)
+        {
+            return $"{name}:\n{shape}\n{pos}\n{vel}\n";
         }
     }
 }

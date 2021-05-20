@@ -65,5 +65,10 @@ namespace AABB_Collisions
             return texture;
         }
 
+        public static Vector2 PointToVector2(Point point)
+        {
+            return new Vector2(point.X, point.Y);
+        }
+
     }
 }

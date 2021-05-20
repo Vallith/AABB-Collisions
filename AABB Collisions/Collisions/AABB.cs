@@ -11,12 +11,9 @@ namespace AABB_Collisions
         public Vector2 min;
         public Vector2 max;
 
-        public static bool AABBvsAABB(AABB a, AABB b)
+        public bool IsInside(Vector2 vec2)
         {
-
-            if (a.max.X < b.min.X || a.min.X > b.max.X) return false;
-            if (a.max.Y < b.min.Y || a.min.Y > b.max.Y) return false;
-            return true;
+            return (vec2.X > min.X && vec2.X < max.X && vec2.Y > min.Y && vec2.Y < max.Y);
         }
 
     }

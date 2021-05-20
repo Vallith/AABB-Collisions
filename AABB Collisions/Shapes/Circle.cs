@@ -39,5 +39,10 @@ namespace AABB_Collisions
             massData = new MassData(density * area);
         }
 
+        public override void DrawOutline()
+        {
+            Game1.instance._spriteBatch.DrawCircle(pos, radius, 30, InvertedColor, outlineWidth);
+        }
+
     }
 }

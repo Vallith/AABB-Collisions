@@ -201,9 +201,7 @@ namespace AABB_Collisions
             Rigidbody a = m.objectA;
             Rigidbody b = m.objectB;
             // Calculate relativeVelocity
-            Vector2 relativeVelocity = b.vel - a.vel;
-
-            Extensions.Vector2Normalise(relativeVelocity, out m.normal);            
+            Vector2 relativeVelocity = b.vel - a.vel;         
 
             // Calculate relativeVelocity in terms of the normal direction
             float velAlongNormal = Extensions.Vector2Dot(relativeVelocity, m.normal);

@@ -45,5 +45,17 @@ namespace AABB_Collisions
             massData = new MassData(density * area);
         }
 
+        public override void DrawOutline()
+        {
+            // Top line
+            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.max.X - outlineWidth, aabb.min.Y), InvertedColor, outlineWidth);
+            // Right line
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.max.X, aabb.min.Y), aabb.max, InvertedColor, outlineWidth);
+            // Left line
+            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.min.X, aabb.max.Y), InvertedColor, outlineWidth);
+            // Bottom line
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max - new Vector2(outlineWidth, 0), InvertedColor, outlineWidth);
+        }
+
     }
 }
