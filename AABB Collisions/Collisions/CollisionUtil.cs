@@ -125,6 +125,11 @@ namespace AABB_Collisions
             m.objectA = m.objectB;
             m.objectB = temp;
             bool result = AABBvsCircle(m);
+
+            temp = m.objectA;
+            m.objectA = m.objectB;
+            m.objectB = temp;
+
             if (result == true)
             {
                 m.normal = -m.normal;

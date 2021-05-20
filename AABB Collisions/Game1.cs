@@ -68,10 +68,10 @@ namespace AABB_Collisions
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
+            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 750), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)));
             circleA = RigidbodyStorage.Create(new Circle(new Vector2(300, 100), 30, Mats["BouncyBall"], Color.Red), "Circle A");
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(489, 254), 90, Mats["'Aerogel'"], new Color(85, 158, 89)), "Circle B");
             square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 90, 90, 0, Mats["Metal"], new Color(41, 110, 143)), "Square");
-            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 750), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)));
 
             //circleA.SetVelocity(50, 0);
            //circleB.SetVelocity(0, 500);

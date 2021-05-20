@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Jack Allpike/source/repos/Git Repositories/AABB Collisions/AABB Collisions/Content/DefaultFont.spritefont</File>
+    <File>S:/Projects/Contribs/Jack/AABBCollisions/AABB Collisions/Content/DefaultFont.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

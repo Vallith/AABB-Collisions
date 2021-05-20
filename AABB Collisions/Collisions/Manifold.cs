@@ -36,7 +36,10 @@ namespace AABB_Collisions
 
         public void Solve()
         {
-            bool result = collisionMethods[(int)objectA.shape][(int)objectB.shape](this);
+            int first = (int)objectA.shape;
+            int second = (int)objectB.shape;
+            Func<Manifold, bool> coltest = collisionMethods[first][second];
+            bool result = coltest(this);
             if (result)
             {
                 Console.WriteLine($"Collision: {objectA.shape}:{objectA.color} and {objectB.shape}:{objectB.color}");
