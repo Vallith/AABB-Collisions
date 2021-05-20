@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace AABB_Collisions
 {
@@ -18,6 +19,7 @@ namespace AABB_Collisions
             get { return MaterialStorage.materialTypes; }
         }
 
+        Quadtree quad;
 
         const float fps = 100;
         const float dt = 1 / fps;
@@ -57,6 +59,7 @@ namespace AABB_Collisions
 
         protected override void Initialize()
         {
+            Random rand = new Random();
             AllocConsole();
             // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = 800;
@@ -69,6 +72,22 @@ namespace AABB_Collisions
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], Color.Green), "Circle B");
             square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], Color.Blue), "Square");
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], Color.Black));
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (rand.Next(1, 100) > 50)
+                {
+                    Vector2 randPos = new Vector2(rand.Next(0, 800), rand.Next(0, 800));
+                    RigidbodyStorage.Create(new RigidRect(randPos, rand.Next(1, 120), rand.Next(1, 120), 0, Mats.ElementAt(rand.Next(0, Mats.Count - 2)).Value, new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255))));
+                }
+                else
+                {
+                    Vector2 randPos = new Vector2(rand.Next(0, 800), rand.Next(0, 800));
+                    RigidbodyStorage.Create(new Circle(randPos, rand.Next(1, 120), Mats.ElementAt(rand.Next(0, Mats.Count - 2)).Value, new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255))));
+                }
+            }
+            quad = new Quadtree(0, new AABB(0,0,800, 800));
 
             //circleA.SetVelocity(50, 0);
             //circleB.SetVelocity(0, 500);
@@ -87,6 +106,24 @@ namespace AABB_Collisions
         bool fWasPressed;
         protected override void Update(GameTime gameTime)
         {
+            quad.Clear();
+            for (int i = 0; i < RigidbodyStorage.bodies.Count; i++)
+            {
+                quad.insert(RigidbodyStorage.bodies[i]);
+            }
+
+            List<Rigidbody> returnObjects = new List<Rigidbody>();
+            for (int i = 0; i < RigidbodyStorage.bodies.Count; i++)
+            {
+                returnObjects.Clear();
+                quad.Retrieve(returnObjects, RigidbodyStorage.bodies[i]);
+
+                for (int x = 0; x < returnObjects.Count; x++)
+                {
+                    // Run collision detection algorithm between objects
+                }
+            }
+
 
             currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
@@ -181,19 +218,33 @@ namespace AABB_Collisions
             {
                 
                 element.Key.Draw(element.Value);
-                element.Key.DrawVelocityVector();
-                element.Key.DrawAABB();
+                //element.Key.DrawVelocityVector();
+                //element.Key.DrawAABB();
                 if (string.IsNullOrEmpty(element.Key.name) == false)
                 {
                     _spriteBatch.DrawString(defaultFont, element.Key.ToString(true), element.Key.pos, Color.Black);
                 }
             }
+
+            DrawQuadtree(quad);
             _spriteBatch.End();
             // TODO: Add your drawing code here
 
             //base.Draw(gameTime);
         }
 
+
+        public void DrawQuadtree(Quadtree tree)
+        {
+            Util.DrawAABB(tree.bounds);
+            foreach (var item in tree.nodes)
+            {
+                if (item != null)
+                {
+                    DrawQuadtree(item);
+                }
+            }
+        }
 
     }
 }

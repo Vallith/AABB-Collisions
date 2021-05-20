@@ -65,5 +65,16 @@ namespace AABB_Collisions
             return texture;
         }
 
+
+        public static void DrawAABB(AABB aabb)
+        {
+            Game1.instance._spriteBatch.DrawPoint(aabb.max, Color.Red, 10);
+            Game1.instance._spriteBatch.DrawPoint(aabb.min, Color.Blue, 10);
+            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.max.X, aabb.min.Y), Color.Red);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.max.X, aabb.min.Y), aabb.max, Color.Red);
+            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.min.X, aabb.max.Y), Color.Red);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max, Color.Red);
+        }
+
     }
 }

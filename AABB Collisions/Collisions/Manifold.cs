@@ -18,7 +18,7 @@ namespace AABB_Collisions
                     CollisionUtil.CircleVsCircle, CollisionUtil.AABBvsCircle
                 },
                 new Func<Manifold, bool>[]{
-                    CollisionUtil.AABBvsAABB, CollisionUtil.AABBvsAABB
+                    CollisionUtil.CirclevsAABB, CollisionUtil.AABBvsAABB
                 },
         };
 

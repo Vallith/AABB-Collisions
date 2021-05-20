@@ -196,6 +196,14 @@ namespace AABB_Collisions
             return true;
         }
 
+        public static bool CirclevsAABB(Manifold m)
+        {
+            Rigidbody temp = m.objectA;
+            m.objectA = m.objectB;
+            m.objectB = temp;
+            return AABBvsCircle(m);
+        }
+
         public static void ResolveCollision(Manifold m)
         {
             Rigidbody a = m.objectA;

@@ -11,6 +11,18 @@ namespace AABB_Collisions
         public Vector2 min;
         public Vector2 max;
 
+
+        public AABB()
+        {
+
+        }
+
+
+        public AABB(float x, float y, float sizeX, float sizeY)
+        {
+            this.min = new Vector2(x, y);
+            this.max = new Vector2(sizeX, sizeY);
+        }
         public static bool AABBvsAABB(AABB a, AABB b)
         {
 
