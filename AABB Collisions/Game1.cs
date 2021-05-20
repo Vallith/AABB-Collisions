@@ -66,8 +66,8 @@ namespace AABB_Collisions
             _graphics.SynchronizeWithVerticalRetrace = false;
 
             //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
-            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], Color.Green));
-            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], Color.Blue));
+            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], Color.Green), "Circle B");
+            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], Color.Blue), "Square");
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], Color.Black));
 
             //circleA.SetVelocity(50, 0);
@@ -183,6 +183,10 @@ namespace AABB_Collisions
                 element.Key.Draw(element.Value);
                 element.Key.DrawVelocityVector();
                 element.Key.DrawAABB();
+                if (string.IsNullOrEmpty(element.Key.name) == false)
+                {
+                    _spriteBatch.DrawString(defaultFont, element.Key.ToString(true), element.Key.pos, Color.Black);
+                }
             }
             _spriteBatch.End();
             // TODO: Add your drawing code here

@@ -11,9 +11,10 @@ namespace AABB_Collisions
 
         public static Dictionary<Rigidbody, Texture2D> objectList = new Dictionary<Rigidbody, Texture2D>();
 
-        public static T Create<T>(T rigidbody) where T: Rigidbody
+        public static T Create<T>(T rigidbody, string name = "") where T: Rigidbody
         {
             objectList.Add(rigidbody, rigidbody.CreateTexture(rigidbody.color));
+            rigidbody.name = name;
             return rigidbody;
         }
 

@@ -38,6 +38,7 @@ namespace AABB_Collisions
             bool result = collisionMethods[(int)objectA.shape][(int)objectB.shape](this);
             if (result)
             {
+                Console.WriteLine($"Collision: {objectA.shape}:{objectA.color} and {objectB.shape}:{objectB.color}");
                 CollisionUtil.ResolveCollision(this);
                 PositionalCorrection();
             }

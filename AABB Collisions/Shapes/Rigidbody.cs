@@ -15,6 +15,8 @@ namespace AABB_Collisions
             AABB = 1
         };
 
+        public string name;
+
         public AABB aabb;
 
         public MassData massData;
@@ -88,6 +90,12 @@ namespace AABB_Collisions
             {
                 force += item;
             }
+        }
+
+
+        public string ToString(bool full)
+        {
+            return $"{name}:\n{shape}\n{pos}\n{vel}\n";
         }
     }
 }
