@@ -67,11 +67,11 @@ namespace AABB_Collisions
 
             //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], Color.Green));
-            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], Color.Blue));
+            //square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], Color.Blue));
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], Color.Black));
 
             //circleA.SetVelocity(50, 0);
-            //circleB.SetVelocity(0, 500);
+            circleB.SetVelocity(0, 1000);
             //circleC.SetVelocity(0, -600);
 
             base.Initialize();
