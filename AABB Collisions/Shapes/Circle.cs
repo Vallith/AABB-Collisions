@@ -10,10 +10,11 @@ namespace AABB_Collisions
     {
         public float radius;
 
-        public Circle(Vector2 pos, float radius, MassData massData, float restitution, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, massData, restitution, color, useGravity, gravityScale)
+        public Circle(Vector2 pos, float radius, Material material, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, material, color, useGravity, gravityScale)
         {
             this.radius = radius;
             shape = ShapeType.Circle;
+            CalculateMass(material.density);
         }
 
         public override void Draw(Texture2D texture)
@@ -31,5 +32,12 @@ namespace AABB_Collisions
         {
             return Util.GetColoredCircle(radius, color);
         }
+
+        public override void CalculateMass(float density)
+        {
+            float area = (float)Math.PI * (radius * radius);
+            massData = new MassData(density * area);
+        }
+
     }
 }

@@ -13,13 +13,14 @@ namespace AABB_Collisions
         public float height;
         float angle;
 
-        public RigidRect(Vector2 pos, float width, float height, MassData massData, float angle, float restitution, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, massData, restitution, color, useGravity, gravityScale)
+        public RigidRect(Vector2 pos, float width, float height, float angle, Material material, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, material, color, useGravity, gravityScale)
         {
             this.width = width;
             this.height = height;
             this.angle = angle;
             this.color = color;
-            this.shape = ShapeType.AABB;
+            shape = ShapeType.AABB;
+            CalculateMass(material.density);
         }
 
         public override Texture2D CreateTexture(Color color)
@@ -37,5 +38,12 @@ namespace AABB_Collisions
             aabb.min = new Vector2(pos.X - width / 2, pos.Y - height / 2);
             aabb.max = new Vector2(pos.X + width / 2, pos.Y + height / 2);
         }
+
+        public override void CalculateMass(float density)
+        {
+            float area = width * height;
+            massData = new MassData(density * area);
+        }
+
     }
 }

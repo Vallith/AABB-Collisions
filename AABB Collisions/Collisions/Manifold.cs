@@ -38,7 +38,8 @@ namespace AABB_Collisions
             bool result = collisionMethods[(int)objectA.shape][(int)objectB.shape](this);
             if (result)
             {
-                CollisionUtil.ResolveCollision(objectA, objectB);
+                CollisionUtil.ResolveCollision(this);
+                PositionalCorrection();
             }
         }
 

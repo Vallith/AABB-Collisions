@@ -19,9 +19,9 @@ namespace AABB_Collisions
 
         public MassData massData;
 
-        public ShapeType shape;
+        public Material material;
 
-        public float restitution;
+        public ShapeType shape;
 
         static float gravity = 80;
         public float gravityScale = 1;
@@ -34,12 +34,11 @@ namespace AABB_Collisions
         public Vector2 force;
 
 
-        public Rigidbody(Vector2 pos, MassData massData, float restitution, Color color, bool useGravity = true, float gravityScale = 1)
+        public Rigidbody(Vector2 pos, Material material, Color color, bool useGravity = true, float gravityScale = 1)
         {
             aabb = new AABB();
             this.pos = pos;
-            this.massData = massData;
-            this.restitution = restitution;
+            this.material = material;
             this.gravityScale = useGravity == true ? gravityScale : 0;
             this.color = color;
             RecalculateAABB();
@@ -50,6 +49,9 @@ namespace AABB_Collisions
         public abstract void Draw(Texture2D texture);
 
         public abstract Texture2D CreateTexture(Color color);
+
+        public abstract void CalculateMass(float density);
+
 
         public void Update(float dt)
         {
@@ -87,6 +89,5 @@ namespace AABB_Collisions
                 force += item;
             }
         }
-
     }
 }

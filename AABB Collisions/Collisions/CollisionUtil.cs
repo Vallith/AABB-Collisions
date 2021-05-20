@@ -7,7 +7,6 @@ namespace AABB_Collisions
 {
     public static class CollisionUtil
     {
-        static Vector2 normal = new Vector2(1, 0);
 
         public static bool CirclevsCircleUnoptimized(Circle a, Circle b)
         {
@@ -197,29 +196,31 @@ namespace AABB_Collisions
             return true;
         }
 
-        public static void ResolveCollision(Rigidbody a, Rigidbody b)
+        public static void ResolveCollision(Manifold m)
         {
+            Rigidbody a = m.objectA;
+            Rigidbody b = m.objectB;
             // Calculate relativeVelocity
             Vector2 relativeVelocity = b.vel - a.vel;
 
-            Extensions.Vector2Normalise(relativeVelocity, out normal);            
+            Extensions.Vector2Normalise(relativeVelocity, out m.normal);            
 
             // Calculate relativeVelocity in terms of the normal direction
-            float velAlongNormal = Extensions.Vector2Dot(relativeVelocity, normal);
+            float velAlongNormal = Extensions.Vector2Dot(relativeVelocity, m.normal);
 
             // If velocities are separating
             if (velAlongNormal < 0) 
                 return;
 
             // Take min restitution out of 2 circles
-            float e = Math.Min(a.restitution, b.restitution);
+            float e = Math.Min(a.material.restitution, b.material.restitution);
 
             // Calculate impulse scalar
             float j = -(1 + e) * velAlongNormal;
             j = j / (a.massData.inverseMass + b.massData.inverseMass);
 
             // Apply impulse
-            Vector2 impulse = j * normal;
+            Vector2 impulse = j * m.normal;
 
             a.vel -= a.massData.inverseMass * impulse;
             b.vel += b.massData.inverseMass * impulse;
