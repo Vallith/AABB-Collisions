@@ -10,7 +10,8 @@ namespace AABB_Collisions
     {
         // CircleVsCircle = 0, 0
         // AABBvsCircle =   0, 1
-        // AABBvsAABB =     1, 0
+        // CirclevsAABB =   1, 0
+        // AABBvsAABB =      1, 1
 
         static Func<Manifold, bool>[][] collisionMethods = new Func<Manifold, bool>[2][]
         {
@@ -18,7 +19,7 @@ namespace AABB_Collisions
                     CollisionUtil.CircleVsCircle, CollisionUtil.AABBvsCircle
                 },
                 new Func<Manifold, bool>[]{
-                    CollisionUtil.AABBvsAABB, CollisionUtil.AABBvsAABB
+                    CollisionUtil.CirclevsAABB, CollisionUtil.AABBvsAABB
                 },
         };
 

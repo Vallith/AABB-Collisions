@@ -15,7 +15,8 @@ namespace AABB_Collisions
             {"BouncyBall", new Material(0.3f, 0.8f)},
             {"SuperBall", new Material(0.3f, 0.95f)},
             {"Pillow", new Material(0.1f, 0.2f)},
-            {"Static", new Material(0.0f, 0.4f)}
+            {"Static", new Material(0.0f, 0.4f)},
+            {"'Aerogel'", new Material(0.02f, 0.5f) }
         };
     }
 }

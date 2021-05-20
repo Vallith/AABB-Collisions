@@ -4,20 +4,21 @@ using Microsoft.Xna.Framework.Input;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace AABB_Collisions
 {
     public class Game1 : Game
     {
-        // TODO:
-        // Positional Correction once Manifolds are implemented
-        // Calculate mass off of density and area
 
         public Dictionary<string, Material> Mats
         {
             get { return MaterialStorage.materialTypes; }
         }
 
+        public Random rand = new Random();
+
+        Point mousePoint;
 
         const float fps = 100;
         const float dt = 1 / fps;
@@ -67,13 +68,13 @@ namespace AABB_Collisions
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            //circleA = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, 0f, 0.5f, Color.Red));
-            circleB = RigidbodyStorage.Create(new Circle(new Vector2(400, 200), 90, Mats["SuperBall"], new Color(85, 158, 89)), "Circle B");
-            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 180, 180, 0, Mats["Metal"], new Color(41, 110, 143)), "Square");
-            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)));
+            circleA = RigidbodyStorage.Create(new Circle(new Vector2(300, 100), 30, Mats["BouncyBall"], Color.Red), "Circle A");
+            circleB = RigidbodyStorage.Create(new Circle(new Vector2(489, 254), 90, Mats["'Aerogel'"], new Color(85, 158, 89)), "Circle B");
+            square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 90, 90, 0, Mats["Metal"], new Color(41, 110, 143)), "Square");
+            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 750), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)));
 
             //circleA.SetVelocity(50, 0);
-            //circleB.SetVelocity(0, 1000);
+           //circleB.SetVelocity(0, 500);
             //circleC.SetVelocity(0, -600);
 
             base.Initialize();
@@ -88,7 +89,9 @@ namespace AABB_Collisions
 
         protected override void Update(GameTime gameTime)
         {
+            _spriteBatch.Begin();
             Input.Process();
+
             currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
 
@@ -104,6 +107,7 @@ namespace AABB_Collisions
             if (accumulator > 0.2f)
                 accumulator = 0.2f;
 
+            DrawGame(gameTime);
 
             while (accumulator > dt)
             {
@@ -143,8 +147,6 @@ namespace AABB_Collisions
                 accumulator -= dt;
             }
 
-            float alpha = accumulator / dt;
-            
 
             if (Input.IsPressed(Keys.F))
             {
@@ -156,17 +158,44 @@ namespace AABB_Collisions
                 canStep = true;
             }
 
+            if (Input.IsPressed(MouseButton.LeftButton) || Input.IsPressed(MouseButton.RightButton))
+            {
+                bool isInside = true;
+                foreach (var item in RigidbodyStorage.objectList.Keys)
+                {
+                    if (item.aabb.IsInside(Util.PointToVector2(mousePoint)))
+                    {
+                        isInside = true;
+                        break;
+                    }
+                    else
+                    {
+                        isInside = false;
+                    }
+                }
+                if (!isInside && Input.IsPressed(MouseButton.LeftButton))
+                {
+                    RigidbodyStorage.Create(new Circle(Util.PointToVector2(mousePoint), rand.Next(10, 30), Mats["SuperBall"], new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255))));
+                }
+                else if (!isInside && Input.IsPressed(MouseButton.RightButton))
+                {
+                    RigidbodyStorage.Create(new RigidRect(Util.PointToVector2(mousePoint), rand.Next(10, 60), rand.Next(10, 60), 0, Mats["Wood"], new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255))));
+                }
+            }
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            _spriteBatch.End();
 
-            DrawGame(gameTime, alpha);
             base.Update(gameTime);
         }
-        protected void DrawGame(GameTime gameTime, float alpha)
+        protected void DrawGame(GameTime gameTime)
         {
+            mousePoint = Mouse.GetState().Position;
             GraphicsDevice.Clear(new Color(111, 177, 199));
 
-            _spriteBatch.Begin();
+            
 
             _spriteBatch.DrawString(defaultFont, $"{Mouse.GetState().Position}", new Vector2(20, 20), Color.Black);
             foreach (var element in RigidbodyStorage.objectList)
@@ -174,25 +203,21 @@ namespace AABB_Collisions
                    
                 element.Key.Draw(element.Value);
                 element.Key.DrawVelocityVector();
-                //element.Key.DrawAABB();
-                if (Input.IsPressed(MouseButton.LeftButton))
-                {
-                    Point mousePoint = Mouse.GetState().Position;
-                    foreach (var item in RigidbodyStorage.objectList.Keys)
-                    {
-                        if (item.aabb.IsInside(Util.PointToVector2(mousePoint)))
-                        {
-                            selectedShape = item;
-                        }
-                    }
-                }
+                element.Key.DrawAABB();
                 if (selectedShape != null)
                 {
                     _spriteBatch.DrawString(defaultFont, selectedShape.ToString(true), new Vector2(20, 50), Color.Black);
                     selectedShape.DrawOutline();
                 }
+                if (Input.IsPressed(MouseButton.LeftButton))
+                {
+                    if (element.Key.aabb.IsInside(Util.PointToVector2(mousePoint)))
+                    {
+                        selectedShape = element.Key;
+                    }
+                }
+
             }
-            _spriteBatch.End();
         }
 
 

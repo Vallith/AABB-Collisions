@@ -98,10 +98,9 @@ namespace AABB_Collisions
             }
         }
 
-
         public string ToString(bool full)
         {
-            return $"{name}:\n{shape}\n{pos}\n{vel}\n";
+            return $"{name}:\n{shape}\n{pos}\n{vel}\n{massData.mass}kg\n";
         }
     }
 }

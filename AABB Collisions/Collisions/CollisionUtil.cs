@@ -19,7 +19,6 @@ namespace AABB_Collisions
         // 2 potentially colliding objects.
         public static bool CircleVsCircle(Manifold m)
         {
-            Console.WriteLine("CircleVsCircle");
             Circle a = (Circle)m.objectA;
             Circle b = (Circle)m.objectB;
 
@@ -120,6 +119,19 @@ namespace AABB_Collisions
             return false;
         }
 
+        public static bool CirclevsAABB(Manifold m)
+        {
+            Rigidbody temp = m.objectA;
+            m.objectA = m.objectB;
+            m.objectB = temp;
+            bool result = AABBvsCircle(m);
+            if (result == true)
+            {
+                m.normal = -m.normal;
+            }
+            return result;
+        }
+
         public static bool AABBvsCircle(Manifold m)
         {
             //Console.WriteLine("AABBvsCircle");
@@ -179,17 +191,20 @@ namespace AABB_Collisions
                 return false;
 
             dist = (float)Math.Sqrt(dist);
+            if (a == Game1.instance.selectedShape || b == Game1.instance.selectedShape)
+            {
 
+            }
             // Collision normal needs to be flipped to point outside
             // if the circle was inside the AABB
             if (inside)
             {
-                m.normal = -n;
+                m.normal = -normal;
                 m.penetration = r - dist;
             }
             else
             {
-                m.normal = n;
+                m.normal = normal;
                 m.penetration = r - dist;
             }
             Extensions.Vector2Normalise(m.normal, out m.normal);
@@ -201,7 +216,7 @@ namespace AABB_Collisions
             Rigidbody a = m.objectA;
             Rigidbody b = m.objectB;
             // Calculate relativeVelocity
-            Vector2 relativeVelocity = b.vel - a.vel;         
+            Vector2 relativeVelocity = b.vel - a.vel;
 
             // Calculate relativeVelocity in terms of the normal direction
             float velAlongNormal = Extensions.Vector2Dot(relativeVelocity, m.normal);
