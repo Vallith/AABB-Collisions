@@ -16,5 +16,16 @@ namespace AABB_Collisions
             return (vec2.X > min.X && vec2.X < max.X && vec2.Y > min.Y && vec2.Y < max.Y);
         }
 
+        public static bool InsideCircle(Vector2 point, Vector2 centre, float radius)
+        { 
+            return ((point.X - centre.X) * (point.X - centre.X) + (point.Y - centre.Y) * (point.Y - centre.Y)) < radius * radius;
+        }
+
+
+        public static bool InsideSquare(Vector2 min, Vector2 max, Vector2 point)
+        {
+            return (point.X > min.X && point.X < max.X && point.Y > min.Y && point.Y < max.Y);
+        }
+
     }
 }

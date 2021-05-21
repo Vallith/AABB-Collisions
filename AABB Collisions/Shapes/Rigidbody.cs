@@ -30,7 +30,7 @@ namespace AABB_Collisions
 
         public ShapeType shape;
 
-        static float gravity = 80;
+        public static float gravity = 80;
         public float gravityScale = 1;
         public bool useGravity = true;
 

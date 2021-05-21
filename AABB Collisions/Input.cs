@@ -16,24 +16,24 @@ namespace AABB_Collisions
     {
 
 
-        static KeyboardState current;
-        static KeyboardState previous;
+        public static KeyboardState current;
+        public static KeyboardState previous;
 
-        static MouseState currentMouse;
-        static MouseState previousMouse;
+        public static MouseState mouse;
+        public static MouseState previousMouse;
 
         static Input()
         {
             current = Keyboard.GetState();
-            currentMouse = Mouse.GetState();
+            mouse = Mouse.GetState();
         }
 
         public static void Process()
         {
             previous = current;
-            previousMouse = currentMouse;
+            previousMouse = mouse;
             current = Keyboard.GetState();
-            currentMouse = Mouse.GetState();
+            mouse = Mouse.GetState();
         }
 
         public static bool IsHeld(Keys key)
@@ -51,13 +51,13 @@ namespace AABB_Collisions
             switch (mouseButton)
             {
                 case MouseButton.LeftButton:
-                    return currentMouse.LeftButton == ButtonState.Pressed;
+                    return mouse.LeftButton == ButtonState.Pressed;
 
                 case MouseButton.RightButton:
-                    return currentMouse.RightButton == ButtonState.Pressed;
+                    return mouse.RightButton == ButtonState.Pressed;
 
                 case MouseButton.MiddleButton:
-                    return currentMouse.MiddleButton == ButtonState.Pressed;
+                    return mouse.MiddleButton == ButtonState.Pressed;
                 default:
                     return false;
             }
@@ -68,13 +68,13 @@ namespace AABB_Collisions
             switch (mouseButton)
             {
                 case MouseButton.LeftButton:
-                    return currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton != ButtonState.Pressed;
+                    return mouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton != ButtonState.Pressed;
 
                 case MouseButton.RightButton:
-                    return currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton != ButtonState.Pressed;
+                    return mouse.RightButton == ButtonState.Pressed && previousMouse.RightButton != ButtonState.Pressed;
 
                 case MouseButton.MiddleButton:
-                    return currentMouse.MiddleButton == ButtonState.Pressed && previousMouse.MiddleButton != ButtonState.Pressed;
+                    return mouse.MiddleButton == ButtonState.Pressed && previousMouse.MiddleButton != ButtonState.Pressed;
                 default:
                     return false;
             }

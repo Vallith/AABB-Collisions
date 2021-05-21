@@ -55,6 +55,7 @@ namespace AABB_Collisions
 
         public Rigidbody selectedShape;
 
+        Slider testingSlider;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -78,6 +79,9 @@ namespace AABB_Collisions
             //
             //circleTest1.SetVelocity(100, 0);
 
+            testingSlider = new Slider(Vector2.One * 100, 10, 100, -200, 200);
+            testingSlider.onSliderChanged += GravitySliderOnValueChanged;
+
             leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(25, 400), 50, 800, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
             rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(775, 400), 50, 800, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
@@ -92,6 +96,12 @@ namespace AABB_Collisions
             base.Initialize();
         }
 
+        public void GravitySliderOnValueChanged(Slider slider, float value)
+        {
+            Rigidbody.gravity = value;
+            Console.WriteLine(value);
+        }
+
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -104,6 +114,7 @@ namespace AABB_Collisions
             _spriteBatch.Begin();
             Input.Process();
 
+    
             currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
 
@@ -119,7 +130,12 @@ namespace AABB_Collisions
             if (accumulator > 0.2f)
                 accumulator = 0.2f;
 
+            testingSlider.InputControl();
+            testingSlider.DrawGUI();
+
             DrawGame(gameTime);
+
+
 
             while (accumulator > dt)
             {
