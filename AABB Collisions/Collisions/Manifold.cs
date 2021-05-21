@@ -50,8 +50,8 @@ namespace AABB_Collisions
 
         public void PositionalCorrection()
         {
-            const float percentage = 0.2f; // Penetration percentage to correct
-            const float slop = 0.01f;
+            const float percentage = 0.6f; // Penetration percentage to correct
+            const float slop = 0f;
             Extensions.Vector2Normalise(normal, out normal);
 
             Vector2 correction = new Vector2(0, Math.Max(penetration - slop, 0.0f) / (objectA.massData.inverseMass + objectB.massData.inverseMass)) * percentage * normal;

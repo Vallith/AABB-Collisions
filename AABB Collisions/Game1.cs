@@ -16,6 +16,8 @@ namespace AABB_Collisions
             get { return MaterialStorage.materialTypes; }
         }
 
+        public List<UIElement> uiElements = new List<UIElement>();
+
         public Random rand = new Random();
 
         Point mousePoint;
@@ -50,12 +52,13 @@ namespace AABB_Collisions
         public RigidRect leftWall;
         public RigidRect rightWall;
         public RigidRect ground;
-
-        public Texture2D squareTexture;
+        public RigidRect roof;
 
         public Rigidbody selectedShape;
 
         Slider testingSlider;
+        Slider boxHeight;
+        Slider boxWidth;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -79,12 +82,16 @@ namespace AABB_Collisions
             //
             //circleTest1.SetVelocity(100, 0);
 
-            testingSlider = new Slider(Vector2.One * 100, 10, 100, -200, 200);
+            testingSlider = new Slider(new Vector2(90, 120), 10, 100, -500, 500, true);
             testingSlider.onSliderChanged += GravitySliderOnValueChanged;
+
+            boxHeight = new Slider(new Vector2(90, 180), 10, 100, 10, 200, true);
+            boxWidth = new Slider(new Vector2(90, 240), 10, 100, 10, 200, true);
 
             leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(25, 400), 50, 800, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
             rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(775, 400), 50, 800, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
+            roof = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 25), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
             circleA = RigidbodyStorage.Create(new Circle(new Vector2(300, 100), 30, Mats["BouncyBall"], Color.Red), "Circle A");
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(489, 254), 90, Mats["'Aerogel'"], new Color(85, 158, 89)), "Circle B");
             square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 90, 90, 0, Mats["Metal"], new Color(41, 110, 143)), "Square");
@@ -99,7 +106,6 @@ namespace AABB_Collisions
         public void GravitySliderOnValueChanged(Slider slider, float value)
         {
             Rigidbody.gravity = value;
-            Console.WriteLine(value);
         }
 
         protected override void LoadContent()
@@ -109,6 +115,7 @@ namespace AABB_Collisions
             // TODO: use this.Content to load your game content here
         }
 
+        public int collisionCount;
         protected override void Update(GameTime gameTime)
         {
             _spriteBatch.Begin();
@@ -129,13 +136,6 @@ namespace AABB_Collisions
             // called in a single game loop.
             if (accumulator > 0.2f)
                 accumulator = 0.2f;
-
-            testingSlider.InputControl();
-            testingSlider.DrawGUI();
-
-            DrawGame(gameTime);
-
-
 
             while (accumulator > dt)
             {
@@ -160,15 +160,15 @@ namespace AABB_Collisions
 
                             Manifold m = new Manifold(A, B);
                             m.Solve();
+                            collisionCount++;
+
 
                         }
-                    }
-                    foreach (var rb in RigidbodyStorage.objectList.Keys)
-                    {
-                        rb.CalculateForce();
-                        rb.RecalculateAABB();
-                        rb.Update(dt);
-                        rb.force = new Vector2(0, 0);
+                        A.CalculateForce();
+                        A.RecalculateAABB();
+                        A.Update(dt);
+                        A.force = new Vector2(0, 0);
+
                     }
                     canStep = false;
                 }
@@ -186,9 +186,18 @@ namespace AABB_Collisions
                 canStep = true;
             }
 
+            if (Input.IsPressed(Keys.Delete))
+            {
+                if (selectedShape != null)
+                {
+                    RigidbodyStorage.objectList.Remove(selectedShape);
+                    selectedShape = null;
+                }
+            }
+
             if (Input.IsPressed(MouseButton.LeftButton) || Input.IsPressed(MouseButton.RightButton))
             {
-                bool isInside = true;
+                bool isInside = false;
                 foreach (var item in RigidbodyStorage.objectList.Keys)
                 {
                     if (item.aabb.IsInside(Util.PointToVector2(mousePoint)))
@@ -196,9 +205,16 @@ namespace AABB_Collisions
                         isInside = true;
                         break;
                     }
-                    else
+                }
+                foreach (var item in uiElements)
+                {
+                    foreach (var aabb in item.aabbs)
                     {
-                        isInside = false;
+                        if (aabb.IsInside(mousePoint.ToVector2()))
+                        {
+                            isInside = true;
+                            break;
+                        }
                     }
                 }
                 if (!isInside && Input.IsPressed(MouseButton.LeftButton))
@@ -207,10 +223,11 @@ namespace AABB_Collisions
                 }
                 else if (!isInside && Input.IsPressed(MouseButton.RightButton))
                 {
-                    RigidbodyStorage.Create(new RigidRect(Util.PointToVector2(mousePoint), rand.Next(10, 60), rand.Next(10, 60), 0, Mats["Wood"], new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255))));
+                    RigidbodyStorage.Create(new RigidRect(Util.PointToVector2(mousePoint), boxHeight.Value, boxWidth.Value, 0, Mats["Wood"], new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255))));
                 }
             }
 
+            DrawGame(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -223,20 +240,13 @@ namespace AABB_Collisions
             mousePoint = Mouse.GetState().Position;
             GraphicsDevice.Clear(new Color(111, 177, 199));
 
-            
-
-            _spriteBatch.DrawString(defaultFont, $"{Mouse.GetState().Position}", new Vector2(20, 20), Color.Black);
             foreach (var element in RigidbodyStorage.objectList)
             {
                    
                 element.Key.Draw(element.Value);
                 element.Key.DrawVelocityVector();
                 //element.Key.DrawAABB();
-                if (selectedShape != null)
-                {
-                    _spriteBatch.DrawString(defaultFont, selectedShape.ToString(true), new Vector2(20, 50), Color.Black);
-                    selectedShape.DrawOutline();
-                }
+
                 if (Input.IsPressed(MouseButton.LeftButton))
                 {
                     if (element.Key.aabb.IsInside(Util.PointToVector2(mousePoint)))
@@ -246,6 +256,22 @@ namespace AABB_Collisions
                 }
 
             }
+
+            foreach (var item in uiElements)
+            {
+                item.InputControl();
+                item.DrawGUI();
+            }
+
+            if (selectedShape != null)
+            {
+                _spriteBatch.DrawString(defaultFont, selectedShape.ToString(true), new Vector2(600, 20), Color.Black);
+                selectedShape.DrawOutline();
+            }
+            _spriteBatch.DrawString(defaultFont, $"{Mouse.GetState().Position}", new Vector2(75, 20), Color.Black);
+            _spriteBatch.DrawString(defaultFont, $"RB Count: {RigidbodyStorage.objectList.Count}", new Vector2(75, 40), Color.Black);
+            _spriteBatch.DrawString(defaultFont, $"Collision Count: {collisionCount}", new Vector2(75, 60), Color.Black);
+            collisionCount = 0;
         }
 
 

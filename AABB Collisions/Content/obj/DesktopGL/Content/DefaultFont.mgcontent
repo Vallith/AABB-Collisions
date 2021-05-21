@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>S:/Projects/Contribs/Jack/AABBCollisions/AABB Collisions/Content/DefaultFont.spritefont</SourceFile>
-  <SourceTime>2021-05-20T18:48:09.4639332+09:30</SourceTime>
-  <DestFile>S:/Projects/Contribs/Jack/AABBCollisions/AABB Collisions/Content/bin/DesktopGL/Content/DefaultFont.xnb</DestFile>
-  <DestTime>2021-05-21T20:39:40.2308517+09:30</DestTime>
+  <SourceFile>C:/Users/Jack Allpike/source/repos/Git Repositories/AABB Collisions/AABB Collisions/Content/DefaultFont.spritefont</SourceFile>
+  <SourceTime>2021-05-20T17:25:28.2023851+08:00</SourceTime>
+  <DestFile>C:/Users/Jack Allpike/source/repos/Git Repositories/AABB Collisions/AABB Collisions/Content/bin/DesktopGL/Content/DefaultFont.xnb</DestFile>
+  <DestTime>2021-05-21T20:42:18.316732+08:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
-  <ImporterTime>2020-08-10T16:17:54+09:30</ImporterTime>
+  <ImporterTime>2020-08-10T16:17:54+08:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
-  <ProcessorTime>2020-08-10T16:17:54+09:30</ProcessorTime>
+  <ProcessorTime>2020-08-10T16:17:54+08:00</ProcessorTime>
   <Parameters>
     <Key>PremultiplyAlpha</Key>
     <Value>True</Value>

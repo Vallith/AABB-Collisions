@@ -11,6 +11,17 @@ namespace AABB_Collisions
         public Vector2 min;
         public Vector2 max;
 
+        public AABB(Vector2 min, Vector2 max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+
+        public AABB()
+        {
+
+        }
+
         public bool IsInside(Vector2 vec2)
         {
             return (vec2.X > min.X && vec2.X < max.X && vec2.Y > min.Y && vec2.Y < max.Y);
@@ -25,6 +36,11 @@ namespace AABB_Collisions
         public static bool InsideSquare(Vector2 min, Vector2 max, Vector2 point)
         {
             return (point.X > min.X && point.X < max.X && point.Y > min.Y && point.Y < max.Y);
+        }
+
+        public static AABB CreateCircleAABB(Vector2 pos, float radius)
+        {
+            return new AABB(new Vector2(pos.X - radius, pos.Y - radius), new Vector2(pos.X + radius, pos.Y + radius));
         }
 
     }
