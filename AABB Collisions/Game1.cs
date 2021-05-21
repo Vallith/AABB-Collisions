@@ -42,8 +42,13 @@ namespace AABB_Collisions
         public Circle circleA;
         public Circle circleB;
 
+        public Circle circleTest1;
+        public Circle circleTest2;
+
         public RigidRect square;
 
+        public RigidRect leftWall;
+        public RigidRect rightWall;
         public RigidRect ground;
 
         public Texture2D squareTexture;
@@ -68,7 +73,14 @@ namespace AABB_Collisions
 
             _graphics.SynchronizeWithVerticalRetrace = false;
 
-            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 750), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)));
+            //circleTest1 = RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 30, Mats["BouncyBall"], Color.Black));
+            //circleTest2 = RigidbodyStorage.Create(new Circle(new Vector2(600, 400), 30, Mats["BouncyBall"], Color.White));
+            //
+            //circleTest1.SetVelocity(100, 0);
+
+            leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(25, 400), 50, 800, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
+            rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(775, 400), 50, 800, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
+            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(400, 775), 800, 50, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
             circleA = RigidbodyStorage.Create(new Circle(new Vector2(300, 100), 30, Mats["BouncyBall"], Color.Red), "Circle A");
             circleB = RigidbodyStorage.Create(new Circle(new Vector2(489, 254), 90, Mats["'Aerogel'"], new Color(85, 158, 89)), "Circle B");
             square = RigidbodyStorage.Create(new RigidRect(new Vector2(200, 0), 90, 90, 0, Mats["Metal"], new Color(41, 110, 143)), "Square");
@@ -203,7 +215,7 @@ namespace AABB_Collisions
                    
                 element.Key.Draw(element.Value);
                 element.Key.DrawVelocityVector();
-                element.Key.DrawAABB();
+                //element.Key.DrawAABB();
                 if (selectedShape != null)
                 {
                     _spriteBatch.DrawString(defaultFont, selectedShape.ToString(true), new Vector2(20, 50), Color.Black);

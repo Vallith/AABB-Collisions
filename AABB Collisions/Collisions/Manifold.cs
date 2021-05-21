@@ -42,7 +42,7 @@ namespace AABB_Collisions
             bool result = coltest(this);
             if (result)
             {
-                Console.WriteLine($"Collision: {objectA.shape}:{objectA.color} and {objectB.shape}:{objectB.color}");
+                //Console.WriteLine($"Collision: {objectA.shape}:{objectA.color} and {objectB.shape}:{objectB.color}");
                 CollisionUtil.ResolveCollision(this);
                 PositionalCorrection();
             }
@@ -53,6 +53,7 @@ namespace AABB_Collisions
             const float percentage = 0.2f; // Penetration percentage to correct
             const float slop = 0.01f;
             Extensions.Vector2Normalise(normal, out normal);
+
             Vector2 correction = new Vector2(0, Math.Max(penetration - slop, 0.0f) / (objectA.massData.inverseMass + objectB.massData.inverseMass)) * percentage * normal;
             objectA.pos += objectA.massData.inverseMass * correction;
             objectB.pos -= objectB.massData.inverseMass * correction;

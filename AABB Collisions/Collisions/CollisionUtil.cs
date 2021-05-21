@@ -8,13 +8,6 @@ namespace AABB_Collisions
     public static class CollisionUtil
     {
 
-        public static bool CirclevsCircleUnoptimized(Circle a, Circle b)
-        {
-            float r = a.radius + b.radius;
-            float d = Vector2.Distance(a.pos, b.pos);
-            return r > d;
-        }
-
         // This is called when the program loops over every object and decides to test a collision, and only THEN is the Manifold generated between
         // 2 potentially colliding objects.
         public static bool CircleVsCircle(Manifold m)
@@ -26,10 +19,10 @@ namespace AABB_Collisions
             Vector2 normal = b.pos - a.pos;
 
             float radiusSum = a.radius + b.radius;
-            radiusSum *= radiusSum;
+            float radiusSumSquared = radiusSum * radiusSum;
 
             // If the normal is longer than the radiusSum
-            if (normal.LengthSquared() > radiusSum)
+            if (normal.LengthSquared() > radiusSumSquared)
                 // Then we aren't colliding
                 return false;
 
@@ -41,10 +34,8 @@ namespace AABB_Collisions
             {
                 // Penetration distance is difference between radius and distance
                 m.penetration = radiusSum - dist;
-
                 // Points from A to B, and is a unit vector
-                // NOT SURE ON THIS PART, TYPO IN GUIDE?
-                m.normal = normal / dist;
+                m.normal = -normal / dist;
                 return true;
             }
             // Circles are in the same position
@@ -96,9 +87,9 @@ namespace AABB_Collisions
                     {
                         // Point towards B knowing that n points from A to B
                         if (n.X < 0)
-                            m.normal = new Vector2(-1, 0);
-                        else
                             m.normal = new Vector2(1, 0);
+                        else
+                            m.normal = new Vector2(-1, 0);
 
                         m.penetration = xOverlap;
                         return true;
