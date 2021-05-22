@@ -10,6 +10,11 @@ namespace AABB_Collisions
 {
     public class Game1 : Game
     {
+
+        // TODO:
+        // Continuous Collision Detection
+        // Quad Trees
+
         // Game1 instance
         public static Game1 instance;
 
@@ -56,6 +61,7 @@ namespace AABB_Collisions
 
         // UI elements
         RadioButton drawAABBs;
+        RadioButton drawVelocityVectors;
         Slider gravitySlider;
         Slider boxHeight;
         Slider boxWidth;
@@ -75,7 +81,8 @@ namespace AABB_Collisions
             Screen.height = 1440;
             Screen.Initialise();
 
-            drawAABBs = new RadioButton(new Vector2(30, 30), 15, 2);
+            drawAABBs = new RadioButton(new Vector2(26, 30), 15, 2);
+            drawVelocityVectors = new RadioButton(new Vector2(26, 80), 15, 2);
             gravitySlider = new Slider(new Vector2(90, 120), 10, 100, -500, 500, true);
             gravitySlider.onSliderChanged += (slider, value) => { Rigidbody.gravity = value; };
 
@@ -204,6 +211,8 @@ namespace AABB_Collisions
                 Exit();
             _spriteBatch.End();
 
+
+
             base.Update(gameTime);
         }
         protected void DrawGame(GameTime gameTime)
@@ -214,7 +223,10 @@ namespace AABB_Collisions
             {
                    
                 element.Key.Draw(element.Value);
-                element.Key.DrawVelocityVector();
+                if (drawVelocityVectors.isTicked)
+                {
+                    element.Key.DrawVelocityVector();
+                }
                 if (drawAABBs.isTicked)
                 {
                     element.Key.DrawAABB();
