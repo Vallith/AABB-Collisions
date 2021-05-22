@@ -71,9 +71,11 @@ namespace AABB_Collisions
         protected override void Initialize()
         {
             AllocConsole();
-            Screen.width = 2560;
-            Screen.height = 1440;
+            Screen.width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Screen.height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Screen.Initialise();
+
+            
 
             drawAABBs = new RadioButton(new Vector2(30, 30), 15, 2);
             gravitySlider = new Slider(new Vector2(90, 120), 10, 100, -500, 500, true);
