@@ -22,6 +22,8 @@ namespace AABB_Collisions
         public static MouseState mouse;
         public static MouseState previousMouse;
 
+        public static Vector2 MousePos { get => mouse.Position.ToVector2(); }
+
         static Input()
         {
             current = Keyboard.GetState();
@@ -36,15 +38,25 @@ namespace AABB_Collisions
             mouse = Mouse.GetState();
         }
 
+        /// <summary>
+        /// Returns if the supplied key is being held down
+        /// </summary>
         public static bool IsHeld(Keys key)
         {
             return current.IsKeyDown(key);
         }
+        /// <summary>
+        /// Returns true on the frame the key is pressed
+        /// </summary>
 
         public static bool IsPressed(Keys key)
         {
             return current.IsKeyDown(key) && !previous.IsKeyDown(key);
         }
+
+        /// <summary>
+        /// Returns if the supplied mouse button is being held down
+        /// </summary>
 
         public static bool IsHeld(MouseButton mouseButton)
         {
@@ -62,7 +74,9 @@ namespace AABB_Collisions
                     return false;
             }
         }
-
+        /// <summary>
+        /// Returns true on the frame the mouse button is pressed
+        /// </summary>
         public static bool IsPressed(MouseButton mouseButton)
         {
             switch (mouseButton)

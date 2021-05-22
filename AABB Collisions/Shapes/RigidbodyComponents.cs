@@ -4,6 +4,9 @@ using System.Text;
 
 namespace AABB_Collisions
 {
+    /// <summary>
+    /// Struct to store Mass Data
+    /// </summary>
     public struct MassData
     {
         public float inverseMass;
@@ -15,7 +18,9 @@ namespace AABB_Collisions
             inverseMass = mass == 0 ? 0 : 1 / mass;
         }
     }
-
+    /// <summary>
+    /// Struct to store information about the material of an object
+    /// </summary>
     public struct Material
     {
         public float restitution;

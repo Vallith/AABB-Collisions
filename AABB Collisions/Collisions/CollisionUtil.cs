@@ -10,6 +10,9 @@ namespace AABB_Collisions
 
         // This is called when the program loops over every object and decides to test a collision, and only THEN is the Manifold generated between
         // 2 potentially colliding objects.
+        /// <summary>
+        /// Narrow phase collision between a Circle and a Circle
+        /// </summary>
         public static bool CircleVsCircle(Manifold m)
         {
             Circle a = (Circle)m.objectA;
@@ -50,6 +53,9 @@ namespace AABB_Collisions
         }
 
         // RigidRect will eventually become Polygon
+        /// <summary>
+        /// Narrow phase collision between a RigidRect and a RigidRect
+        /// </summary>
         public static bool AABBvsAABB(Manifold m)
         {
             //Console.WriteLine("AABBvsAABB");
@@ -110,6 +116,9 @@ namespace AABB_Collisions
             return false;
         }
 
+        /// <summary>
+        /// Narrow phase collision between a Circle and a RigidRect
+        /// </summary>
         public static bool CirclevsAABB(Manifold m)
         {
             Rigidbody temp = m.objectA;
@@ -128,6 +137,9 @@ namespace AABB_Collisions
             return result;
         }
 
+        /// <summary>
+        /// Reverses manifold objects for narrow phase collision between a Circle and a RigidRect
+        /// </summary>
         public static bool AABBvsCircle(Manifold m)
         {
             //Console.WriteLine("AABBvsCircle");
@@ -207,6 +219,9 @@ namespace AABB_Collisions
             return true;
         }
 
+        /// <summary>
+        /// Calculates impulse to apply to 2 objects which are colliding
+        /// </summary>
         public static void ResolveCollision(Manifold m)
         {
             Rigidbody a = m.objectA;

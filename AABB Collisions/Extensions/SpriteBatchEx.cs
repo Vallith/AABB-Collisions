@@ -68,6 +68,24 @@ namespace AABB_Collisions
             DrawPolygonEdge(spriteBatch, texture, points[points.Count - 1] + offset, points[0] + offset, color, thickness, layerDepth);
         }
 
+        public static void DrawRect(this SpriteBatch spriteBatch, Vector2 pos, int width, int height, Color color, int lineWidth = 1, float layerDepth = 0)
+        {
+
+            int halfWidth = width / 2;
+            int halfHeight = height / 2;
+
+            Vector2 topLeft = new Vector2(pos.X - halfWidth, pos.Y - halfHeight);
+            Vector2 topRight = new Vector2(pos.X + halfWidth, pos.Y - halfHeight);
+            Vector2 bottomLeft = new Vector2(pos.X - halfWidth, pos.Y + halfHeight);
+            Vector2 bottomRight = new Vector2(pos.X + halfWidth, pos.Y + halfHeight);
+
+            Screen.Draw.DrawLine(topLeft, new Vector2(topRight.X - lineWidth, topRight.Y), color, lineWidth);
+            Screen.Draw.DrawLine(topRight, new Vector2(bottomRight.X, bottomRight.Y - lineWidth), color, lineWidth);
+            Screen.Draw.DrawLine(bottomRight, new Vector2(bottomLeft.X + lineWidth, bottomLeft.Y), color, lineWidth);
+            Screen.Draw.DrawLine(bottomLeft, new Vector2(topLeft.X, topLeft.Y + lineWidth), color, lineWidth);
+
+        }
+
         /// <summary>
         /// Draws a point at the specified position. The center of the point will be at the position.
         /// </summary>

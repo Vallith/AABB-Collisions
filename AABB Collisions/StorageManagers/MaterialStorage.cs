@@ -6,7 +6,9 @@ namespace AABB_Collisions
 {
     public static class MaterialStorage
     {
-
+        /// <summary>
+        /// Defines the properties of a material type
+        /// </summary>
         public static Dictionary<string, Material> materialTypes = new Dictionary<string, Material>()
         {
             {"Rock", new Material(0.6f, 0.1f)},

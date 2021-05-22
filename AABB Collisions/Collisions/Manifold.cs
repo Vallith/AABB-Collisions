@@ -13,6 +13,9 @@ namespace AABB_Collisions
         // CirclevsAABB =   1, 0
         // AABBvsAABB =      1, 1
 
+        /// <summary>
+        /// Matrix to determine which collision method is called depending on the types of objects colliding
+        /// </summary>
         static Func<Manifold, bool>[][] collisionMethods = new Func<Manifold, bool>[2][]
         {
                 new Func<Manifold, bool>[]{
@@ -34,12 +37,15 @@ namespace AABB_Collisions
             this.objectB = objectB;
         }
 
+        /// <summary>
+        /// Attempts to solve a collision between 2 objects
+        /// </summary>
         public void Solve()
         {
             int first = (int)objectA.shape;
             int second = (int)objectB.shape;
-            Func<Manifold, bool> coltest = collisionMethods[first][second];
-            bool result = coltest(this);
+            Func<Manifold, bool> colTest = collisionMethods[first][second];
+            bool result = colTest(this);
             if (result)
             {
                 //Console.WriteLine($"Collision: {objectA.shape}:{objectA.color} and {objectB.shape}:{objectB.color}");
@@ -48,6 +54,9 @@ namespace AABB_Collisions
             }
         }
 
+        /// <summary>
+        /// Applies positional correction to prevent sinking
+        /// </summary>
         public void PositionalCorrection()
         {
             const float percentage = 0.6f; // Penetration percentage to correct

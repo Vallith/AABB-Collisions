@@ -64,17 +64,11 @@ namespace AABB_Collisions
             texture.SetData(0, new Rectangle(0, 0, (int)width, (int)height), dataColors, 0, (int)width * (int)height);
             return texture;
         }
-
-        public static Vector2 PointToVector2(Point point)
-        {
-            return new Vector2(point.X, point.Y);
-        }
         
         public static Vector2 ToVector2(this Point p)
         {
             return new Vector2(p.X, p.Y);
         }
-
 
         public static float Remap(float value, float start1, float end, float start2, float end2)
         {

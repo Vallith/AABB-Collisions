@@ -52,15 +52,32 @@ namespace AABB_Collisions
             RecalculateAABB();
         }
 
+        /// <summary>
+        /// Recalculates the AABB upon a change of position
+        /// </summary>
         public abstract void RecalculateAABB();
 
+        /// <summary>
+        /// Draws the object
+        /// </summary>
         public abstract void Draw(Texture2D texture);
 
+        /// <summary>
+        /// Creates a texture for the object
+        /// </summary>
         public abstract Texture2D CreateTexture(Color color);
-
+        /// <summary>
+        /// Calculates the mass of the object based on it's area and density
+        /// </summary>
         public abstract void CalculateMass(float density);
+        /// <summary>
+        /// Draws the outline of the object
+        /// </summary>
         public abstract void DrawOutline();
 
+        /// <summary>
+        /// Updates the position of the object
+        /// </summary>
         public void Update(float dt)
         {
             Vector2 acceleration = new Vector2(force.X * massData.inverseMass, force.Y * massData.inverseMass);
@@ -74,6 +91,9 @@ namespace AABB_Collisions
             vel = new Vector2(x, y);
         }
 
+        /// <summary>
+        /// Draws the Velocity Vector
+        /// </summary>
         public void DrawVelocityVector()
         {
             Game1.instance._spriteBatch.DrawLine(pos, pos + vel, Color.White, 1);
@@ -89,6 +109,9 @@ namespace AABB_Collisions
             Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max, Color.Red);
         }
 
+        /// <summary>
+        /// Applies an array of Vector2 forces to an object, including gravity
+        /// </summary>
         public void CalculateForce(params Vector2[] forces)
         {
             force += Vector2.UnitY * (massData.mass * (gravity * gravityScale));
