@@ -85,7 +85,7 @@ namespace AABB_Collisions
             Screen.height = 800;
             Screen.Initialise();
 
-            quadTree = new QuadTree(new AABB(new Vector2(Screen.width / 2, Screen.height / 2), new Vector2(Screen.width, Screen.height)), 4);
+            quadTree = new QuadTree(new AABB(new Vector2(Screen.width / 2, Screen.height / 2), new Vector2(Screen.width, Screen.height)), 1, 0);
 
             drawAABBs = new RadioButton(new Vector2(26, 30), 15, 2);
             drawVelocityVectors = new RadioButton(new Vector2(26, 80), 15, 2);
@@ -96,15 +96,15 @@ namespace AABB_Collisions
             boxHeight = new Slider(new Vector2(90, 180), 10, 100, 10, 200, true);
             boxWidth = new Slider(new Vector2(90, 240), 10, 100, 10, 200, true);
 
-            RigidbodyStorage.Create(new Circle(new Vector2(400, 400), 20, Mats["Metal"], Color.White));
-            RigidbodyStorage.Create(new Circle(new Vector2(300, 400), 20, Mats["Metal"], Color.White));
-            RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 20, Mats["Metal"], Color.White));
-            RigidbodyStorage.Create(new Circle(new Vector2(500, 400), 20, Mats["Metal"], Color.White));
-
-            leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
-            rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.width - halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
-            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.height - halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
-            roof = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
+            //RigidbodyStorage.Create(new Circle(new Vector2(400, 400), 20, Mats["Metal"], Color.White));
+            //RigidbodyStorage.Create(new Circle(new Vector2(300, 400), 20, Mats["Metal"], Color.White));
+            //RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 20, Mats["Metal"], Color.White));
+            //RigidbodyStorage.Create(new Circle(new Vector2(500, 400), 20, Mats["Metal"], Color.White));
+            //
+            //leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
+            //rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.width - halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
+            //ground = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.height - halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
+            //roof = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
 
             base.Initialize();
         }

@@ -32,6 +32,7 @@ namespace AABB_Collisions
         public override void Draw(Texture2D texture)
         {
             Game1.instance._spriteBatch.Draw(texture, new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height), Color.White);
+            Game1.instance._spriteBatch.DrawString(Game1.instance.defaultFont, collisionIndex.ToString(), pos, Color.White);
         }
 
         public override void RecalculateAABB()

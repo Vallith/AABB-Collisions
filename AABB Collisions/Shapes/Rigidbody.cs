@@ -23,6 +23,8 @@ namespace AABB_Collisions
 
         public AABB aabb;
 
+        public int collisionIndex;
+
         public MassData massData;
 
         public Material material;
