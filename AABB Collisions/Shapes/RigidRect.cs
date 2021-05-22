@@ -15,6 +15,7 @@ namespace AABB_Collisions
 
         public RigidRect(Vector2 pos, float width, float height, float angle, Material material, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, material, color, useGravity, gravityScale)
         {
+            aabb.Size = new Vector2(width, height);
             this.width = width;
             this.height = height;
             this.angle = angle;
@@ -35,8 +36,7 @@ namespace AABB_Collisions
 
         public override void RecalculateAABB()
         {
-            aabb.min = new Vector2(pos.X - width / 2, pos.Y - height / 2);
-            aabb.max = new Vector2(pos.X + width / 2, pos.Y + height / 2);
+            aabb.Pos = pos;
         }
 
         public override void CalculateMass(float density)
@@ -48,13 +48,13 @@ namespace AABB_Collisions
         public override void DrawOutline()
         {
             // Top line
-            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.max.X - outlineWidth, aabb.min.Y), InvertedColor, outlineWidth);
+            Game1.instance._spriteBatch.DrawLine(aabb.TopLeft, new Vector2(aabb.BottomRight.X - outlineWidth, aabb.TopLeft.Y), InvertedColor, outlineWidth);
             // Right line
-            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.max.X, aabb.min.Y), aabb.max, InvertedColor, outlineWidth);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.BottomRight.X, aabb.TopLeft.Y), aabb.BottomRight, InvertedColor, outlineWidth);
             // Left line
-            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.min.X, aabb.max.Y), InvertedColor, outlineWidth);
+            Game1.instance._spriteBatch.DrawLine(aabb.TopLeft, new Vector2(aabb.TopLeft.X, aabb.BottomRight.Y), InvertedColor, outlineWidth);
             // Bottom line
-            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max - new Vector2(outlineWidth, 0), InvertedColor, outlineWidth);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.TopLeft.X, aabb.BottomRight.Y), aabb.BottomRight - new Vector2(outlineWidth, 0), InvertedColor, outlineWidth);
         }
 
     }

@@ -43,9 +43,9 @@ namespace AABB_Collisions
         /// </summary>
         public static void Initialise()
         {
-            _graphics.PreferredBackBufferWidth = Screen.width;
-            _graphics.PreferredBackBufferHeight = Screen.height;
-            _graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = width;
+            _graphics.PreferredBackBufferHeight = height;
+            //_graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
         }
 

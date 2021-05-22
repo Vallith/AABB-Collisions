@@ -69,8 +69,8 @@ namespace AABB_Collisions
             AABB bbox = b.aabb;
 
             // Calculate half extents along x axis for each object
-            float aExtentX = (abox.max.X - abox.min.X) / 2;
-            float bExtentX = (bbox.max.X - bbox.min.X) / 2;
+            float aExtentX = (abox.BottomRight.X - abox.TopLeft.X) / 2;
+            float bExtentX = (bbox.BottomRight.X - bbox.TopLeft.X) / 2;
 
             // Calculate overlap on x axis
             float xOverlap = aExtentX + bExtentX - Math.Abs(n.X);
@@ -79,8 +79,8 @@ namespace AABB_Collisions
             if (xOverlap > 0)
             {
                 // Calculate half extents along y axis for each object
-                float aExtentY = (abox.max.Y - abox.min.Y) / 2;
-                float bExtentY = (bbox.max.Y - bbox.min.Y) / 2;
+                float aExtentY = (abox.BottomRight.Y - abox.TopLeft.Y) / 2;
+                float bExtentY = (bbox.BottomRight.Y - bbox.TopLeft.Y) / 2;
 
                 // Calculate overlap on y axis
                 float yOverlap = aExtentY + bExtentY - Math.Abs(n.Y);
@@ -153,8 +153,8 @@ namespace AABB_Collisions
             Vector2 closest = n;
 
             // Calculate half extents along each axis
-            float xExtentA = (a.aabb.max.X - a.aabb.min.X) / 2;
-            float yExtentA = (a.aabb.max.Y - a.aabb.min.Y) / 2;
+            float xExtentA = (a.aabb.BottomRight.X - a.aabb.TopLeft.X) / 2;
+            float yExtentA = (a.aabb.BottomRight.Y - a.aabb.TopLeft.Y) / 2;
 
             // Clamp point to edges of the AABB
             closest.X = Math.Clamp(closest.X, -xExtentA, xExtentA);

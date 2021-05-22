@@ -50,8 +50,7 @@ namespace AABB_Collisions
 
         public override void AABBRecalculate()
         {
-            aabbs[0].min = new Vector2(Pos.X - radius, Pos.Y - radius);
-            aabbs[0].max = new Vector2(Pos.X + radius, Pos.Y + radius);
+            aabbs[0].Pos = pos;
         }
 
         public override void DrawGUI()
@@ -65,7 +64,7 @@ namespace AABB_Collisions
 
         public override void InputControl()
         {
-            if (Input.IsPressed(MouseButton.LeftButton) && AABB.InsideSquare(aabbs[0].min, aabbs[0].max, Input.mouse.Position.ToVector2()))
+            if (Input.IsPressed(MouseButton.LeftButton) && AABB.InsideSquare(aabbs[0].TopLeft, aabbs[0].BottomRight, Input.mouse.Position.ToVector2()))
             {
                 isTicked = !isTicked;
             }
@@ -113,7 +112,7 @@ namespace AABB_Collisions
             this.drawValue = drawValue;
             circleSize = radius - 1 - (radius * 0.2f);
             texture = Util.GetColoredCircle(circleSize, Color.White);
-            aabbs.Add(AABB.CreateCircleAABB(new Vector2(currentX, pos.Y), dragRadius));
+            aabbs.Add(AABB.CreateCircleAABB(new Vector2(currentX, pos.Y), radius));
         }
 
         public override void InputControl() {
@@ -153,8 +152,7 @@ namespace AABB_Collisions
         {
             foreach (var aabb in aabbs)
             {
-                aabb.min = new Vector2(currentX - dragRadius, pos.Y - dragRadius);
-                aabb.max = new Vector2(currentX + dragRadius, pos.Y + dragRadius);
+                aabb.Pos = new Vector2(currentX, pos.Y);
             }
         }
     }

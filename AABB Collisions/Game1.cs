@@ -51,6 +51,8 @@ namespace AABB_Collisions
         public int wallWidth = 50;
         public int halfWallWidth => wallWidth / 2;
 
+        public QuadTree quadTree;
+
         public RigidRect leftWall;
         public RigidRect rightWall;
         public RigidRect ground;
@@ -77,9 +79,13 @@ namespace AABB_Collisions
         protected override void Initialize()
         {
             AllocConsole();
-            Screen.width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            Screen.height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            //Screen.width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            //Screen.height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            Screen.width = 800;
+            Screen.height = 800;
             Screen.Initialise();
+
+            quadTree = new QuadTree(new AABB(new Vector2(Screen.width / 2, Screen.height / 2), new Vector2(Screen.width, Screen.height)), 4);
 
             drawAABBs = new RadioButton(new Vector2(26, 30), 15, 2);
             drawVelocityVectors = new RadioButton(new Vector2(26, 80), 15, 2);
@@ -89,6 +95,11 @@ namespace AABB_Collisions
 
             boxHeight = new Slider(new Vector2(90, 180), 10, 100, 10, 200, true);
             boxWidth = new Slider(new Vector2(90, 240), 10, 100, 10, 200, true);
+
+            RigidbodyStorage.Create(new Circle(new Vector2(400, 400), 20, Mats["Metal"], Color.White));
+            RigidbodyStorage.Create(new Circle(new Vector2(300, 400), 20, Mats["Metal"], Color.White));
+            RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 20, Mats["Metal"], Color.White));
+            RigidbodyStorage.Create(new Circle(new Vector2(500, 400), 20, Mats["Metal"], Color.White));
 
             leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
             rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.width - halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
@@ -136,6 +147,11 @@ namespace AABB_Collisions
 
                 if (canStep)
                 {
+                    quadTree.ClearTree();
+                    foreach (var item in RigidbodyStorage.objectList.Keys)
+                    {
+                        quadTree.Insert(item);
+                    }
 
                     for (int i = 0; i < RigidbodyStorage.objectList.Count; i++)
                     {
@@ -183,7 +199,7 @@ namespace AABB_Collisions
                     selectedShape = null;
                 }
             }
-
+            DrawGame(gameTime);
             if (Input.IsPressed(MouseButton.LeftButton) || Input.IsPressed(MouseButton.RightButton))
             {
                 bool isInside = Screen.isUIElement;
@@ -206,7 +222,7 @@ namespace AABB_Collisions
                 }
             }
 
-            DrawGame(gameTime);
+            
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -219,7 +235,7 @@ namespace AABB_Collisions
         protected void DrawGame(GameTime gameTime)
         {
             GraphicsDevice.Clear(new Color(111, 177, 199));
-
+            quadTree.DrawTree();
             foreach (var element in RigidbodyStorage.objectList)
             {
                    

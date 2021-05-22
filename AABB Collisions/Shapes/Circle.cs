@@ -12,6 +12,8 @@ namespace AABB_Collisions
 
         public Circle(Vector2 pos, float radius, Material material, Color color, bool useGravity = true, float gravityScale = 1) : base(pos, material, color, useGravity, gravityScale)
         {
+            float diameter = radius * 2;
+            aabb.Size = new Vector2(diameter, diameter);
             this.radius = radius;
             shape = ShapeType.Circle;
             CalculateMass(material.density);
@@ -24,8 +26,7 @@ namespace AABB_Collisions
 
         public override void RecalculateAABB()
         {
-            aabb.min = new Vector2(pos.X - radius, pos.Y - radius);
-            aabb.max = new Vector2(pos.X + radius, pos.Y + radius);
+            aabb.Pos = pos;
         }
 
         public override Texture2D CreateTexture(Color color)

@@ -7,16 +7,33 @@ namespace AABB_Collisions
 {
     public class AABB
     {
-        // Min is top left
-        public Vector2 min;
+        private Vector2 pos;
 
-        // Max is bottom right
-        public Vector2 max;
+        private Vector2 size;
+        public Vector2 halfSize;
 
-        public AABB(Vector2 min, Vector2 max)
+        public Vector2 Size
         {
-            this.min = min;
-            this.max = max;
+            get { return size; }
+            set { size = value; halfSize = size / 2; }
+        }
+
+        public Vector2 Pos
+        {
+            get { return pos; }
+            set { pos = value; }
+        }
+
+
+        public Vector2 TopLeft { get => new Vector2(pos.X - halfSize.X, pos.Y - halfSize.Y); }
+        public Vector2 TopRight { get => new Vector2(pos.X + halfSize.X, pos.Y - halfSize.Y); }
+        public Vector2 BottomLeft { get => new Vector2(pos.X - halfSize.X, pos.Y + halfSize.Y); }
+        public Vector2 BottomRight { get => new Vector2(pos.X + halfSize.X, pos.Y + halfSize.Y); }
+
+        public AABB(Vector2 pos, Vector2 size)
+        {
+            Pos = pos;
+            Size = size;
         }
 
         public AABB()
@@ -28,7 +45,7 @@ namespace AABB_Collisions
         /// </summary>
         public bool IsInside(Vector2 vec2)
         {
-            return (vec2.X > min.X && vec2.X < max.X && vec2.Y > min.Y && vec2.Y < max.Y);
+            return (vec2.X > TopLeft.X && vec2.Y > TopLeft.Y && vec2.X < BottomRight.X && vec2.Y < BottomRight.Y);
         }
         /// <summary>
         /// Returns whether or not the given Vector2 is within the AABB of a circle
@@ -50,7 +67,8 @@ namespace AABB_Collisions
         /// </summary>
         public static AABB CreateCircleAABB(Vector2 pos, float radius)
         {
-            return new AABB(new Vector2(pos.X - radius, pos.Y - radius), new Vector2(pos.X + radius, pos.Y + radius));
+            float diameter = radius * 2;
+            return new AABB(pos, new Vector2(diameter, diameter));
         }
 
         /// <summary>
@@ -58,13 +76,7 @@ namespace AABB_Collisions
         /// </summary>
         public static AABB CreateRectAABB(Vector2 pos, int width, int height)
         {
-            int halfWidth = width / 2;
-            int halfHeight = height / 2;
-
-            Vector2 topLeft = new Vector2(pos.X - halfWidth, pos.Y - halfHeight);
-            Vector2 bottomRight = new Vector2(pos.X + halfWidth, pos.Y + halfHeight);
-
-            return new AABB(topLeft, bottomRight);
+            return new AABB(pos, new Vector2(width, height));
         }
 
     }

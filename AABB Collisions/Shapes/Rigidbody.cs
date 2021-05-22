@@ -13,7 +13,6 @@ namespace AABB_Collisions
             get { return new Color(255 - (int)color.R, 255 - (int)color.G, 255 - (int)color.B); }
         }
 
-
         public enum ShapeType
         {
             Circle = 0,
@@ -101,12 +100,12 @@ namespace AABB_Collisions
 
         public void DrawAABB()
         {
-            Game1.instance._spriteBatch.DrawPoint(aabb.max, Color.Red, 10);
-            Game1.instance._spriteBatch.DrawPoint(aabb.min, Color.Blue, 10);
-            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.max.X, aabb.min.Y), Color.Red);
-            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.max.X, aabb.min.Y), aabb.max, Color.Red);
-            Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.min.X, aabb.max.Y), Color.Red);
-            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max, Color.Red);
+            Game1.instance._spriteBatch.DrawPoint(aabb.BottomRight, Color.Red, 10);
+            Game1.instance._spriteBatch.DrawPoint(aabb.TopLeft, Color.Blue, 10);
+            Game1.instance._spriteBatch.DrawLine(aabb.TopLeft, new Vector2(aabb.BottomRight.X, aabb.TopLeft.Y), Color.Red);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.BottomRight.X, aabb.TopLeft.Y), aabb.BottomRight, Color.Red);
+            Game1.instance._spriteBatch.DrawLine(aabb.TopLeft, new Vector2(aabb.TopLeft.X, aabb.BottomRight.Y), Color.Red);
+            Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.TopLeft.X, aabb.BottomRight.Y), aabb.BottomRight, Color.Red);
         }
 
         /// <summary>
