@@ -85,7 +85,7 @@ namespace AABB_Collisions
             Screen.height = 800;
             Screen.Initialise();
 
-            quadTree = new QuadTree(new AABB(new Vector2(Screen.width / 2, Screen.height / 2), new Vector2(Screen.width, Screen.height)), 1, 0);
+            quadTree = new QuadTree(new AABB(new Vector2(Screen.width / 2, Screen.height / 2), new Vector2(Screen.width, Screen.height)), 4, 0);
 
             drawAABBs = new RadioButton(new Vector2(26, 30), 15, 2);
             drawVelocityVectors = new RadioButton(new Vector2(26, 80), 15, 2);
@@ -100,11 +100,11 @@ namespace AABB_Collisions
             //RigidbodyStorage.Create(new Circle(new Vector2(300, 400), 20, Mats["Metal"], Color.White));
             //RigidbodyStorage.Create(new Circle(new Vector2(200, 400), 20, Mats["Metal"], Color.White));
             //RigidbodyStorage.Create(new Circle(new Vector2(500, 400), 20, Mats["Metal"], Color.White));
-            //
-            //leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
-            //rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.width - halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
-            //ground = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.height - halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
-            //roof = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
+            
+            leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
+            rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.width - halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
+            ground = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.height - halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
+            roof = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
 
             base.Initialize();
         }
@@ -153,27 +153,30 @@ namespace AABB_Collisions
                         quadTree.Insert(item);
                     }
 
+                    List<Rigidbody> returnObjects = new List<Rigidbody>();
                     for (int i = 0; i < RigidbodyStorage.objectList.Count; i++)
                     {
+                        returnObjects.Clear();
+                        quadTree.Retrieve(returnObjects, RigidbodyStorage.objectList.ElementAt(i).Key);
+
                         Rigidbody A = RigidbodyStorage.objectList.ElementAt(i).Key;
 
-                        for (int j = i + 1; j < RigidbodyStorage.objectList.Count; j++)
+                        for (int y = 0; y < returnObjects.Count; y++)
                         {
-                            Rigidbody B = RigidbodyStorage.objectList.ElementAt(j).Key;
+                            Rigidbody B = RigidbodyStorage.objectList.ElementAt(y).Key;
                             if (A.massData.inverseMass == 0 && B.massData.inverseMass == 0)
                                 continue;
 
                             Manifold m = new Manifold(A, B);
                             m.Solve();
                             collisionCount++;
-
-
                         }
-                        A.CalculateForce();
-                        A.RecalculateAABB();
-                        A.Update(dt);
-                        A.force = new Vector2(0, 0);
 
+                        Rigidbody curr = RigidbodyStorage.objectList.ElementAt(i).Key;
+                        curr.CalculateForce();
+                        curr.RecalculateAABB();
+                        curr.Update(dt);
+                        curr.force = new Vector2(0, 0);
                     }
                     canStep = false;
                 }

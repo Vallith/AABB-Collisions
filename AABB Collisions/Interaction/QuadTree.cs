@@ -48,12 +48,15 @@ namespace AABB_Collisions
 
             nodes[0] = topLeft;
             nodes[1] = topRight;
-            nodes[2] = bottomLeft;
-            nodes[3] = bottomRight;
+            nodes[2] = bottomRight;
+            nodes[3] = bottomLeft;
         }
 
         public void Insert(Rigidbody rb)
         {
+            if (!boundary.IsInside(rb.pos))
+                return;
+
             // Tree has divided
             if (isDivided)
             {
@@ -124,6 +127,17 @@ namespace AABB_Collisions
                 return 3;
             }
             return -1;
+        }
+
+        public List<Rigidbody> Retrieve(List<Rigidbody> returnObjects, Rigidbody rb)
+        {
+            int index = GetIndex(rb);
+            if (index != -1 && nodes != null)
+            {
+                nodes[index].Retrieve(returnObjects, rb);
+            }
+            returnObjects.AddRange(rigidbodies);
+            return returnObjects;
         }
 
         public void DrawTree()
