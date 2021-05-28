@@ -49,7 +49,6 @@ namespace AABB_Collisions
             this.material = material;
             this.gravityScale = useGravity == true ? gravityScale : 0;
             this.color = color;
-            RecalculateAABB();
         }
 
         /// <summary>
@@ -107,6 +106,7 @@ namespace AABB_Collisions
             Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.max.X, aabb.min.Y), aabb.max, Color.Red);
             Game1.instance._spriteBatch.DrawLine(aabb.min, new Vector2(aabb.min.X, aabb.max.Y), Color.Red);
             Game1.instance._spriteBatch.DrawLine(new Vector2(aabb.min.X, aabb.max.Y), aabb.max, Color.Red);
+            Game1.instance._spriteBatch.DrawString(Game1.instance.defaultFont, name, pos, Color.Red);
         }
 
         /// <summary>

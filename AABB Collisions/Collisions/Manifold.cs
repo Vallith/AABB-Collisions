@@ -44,6 +44,11 @@ namespace AABB_Collisions
         {
             int first = (int)objectA.shape;
             int second = (int)objectB.shape;
+
+            if ((objectA == Game1.instance.selectedShape || objectB == Game1.instance.selectedShape) && (objectA == Game1.instance.leftWall || objectB == Game1.instance.leftWall))
+            {
+
+            }
             Func<Manifold, bool> colTest = collisionMethods[first][second];
             bool result = colTest(this);
             if (result)

@@ -21,6 +21,7 @@ namespace AABB_Collisions
             this.color = color;
             shape = ShapeType.AABB;
             CalculateMass(material.density);
+            RecalculateAABB();
         }
 
         public override Texture2D CreateTexture(Color color)

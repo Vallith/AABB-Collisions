@@ -199,10 +199,7 @@ namespace AABB_Collisions
                 return false;
 
             dist = (float)Math.Sqrt(dist);
-            if (a == Game1.instance.selectedShape || b == Game1.instance.selectedShape)
-            {
 
-            }
             // Collision normal needs to be flipped to point outside
             // if the circle was inside the AABB
             if (inside)

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 namespace AABB_Collisions
 {
@@ -58,7 +59,6 @@ namespace AABB_Collisions
 
         // Currently selected object
         public Rigidbody selectedShape;
-
         // UI elements
         RadioButton drawAABBs;
         RadioButton drawVelocityVectors;
@@ -79,6 +79,8 @@ namespace AABB_Collisions
             AllocConsole();
             Screen.width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Screen.height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            //Screen.width = 1600;
+            //Screen.height = 1600;
             Screen.Initialise();
 
             drawAABBs = new RadioButton(new Vector2(26, 30), 15, 2);
@@ -95,6 +97,8 @@ namespace AABB_Collisions
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.height - halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
             roof = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
 
+            //SAP.Generate();
+
             base.Initialize();
         }
 
@@ -110,6 +114,20 @@ namespace AABB_Collisions
             _spriteBatch.Begin();
             Input.Process();
             Screen.TestUIElement();
+
+            SAP.Sweep();
+            SAP.Prune();
+            SAP.CollisionPass();
+
+            if (Input.IsPressed(Keys.S))
+            {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                SAP.Sweep();
+                sw.Stop();
+                Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+            }
+
 
             currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
@@ -141,18 +159,12 @@ namespace AABB_Collisions
                     {
                         Rigidbody A = RigidbodyStorage.objectList.ElementAt(i).Key;
 
-                        for (int j = i + 1; j < RigidbodyStorage.objectList.Count; j++)
-                        {
-                            Rigidbody B = RigidbodyStorage.objectList.ElementAt(j).Key;
-                            if (A.massData.inverseMass == 0 && B.massData.inverseMass == 0)
-                                continue;
-
-                            Manifold m = new Manifold(A, B);
-                            m.Solve();
-                            collisionCount++;
+                        //for (int j = i + 1; j < RigidbodyStorage.objectList.Count; j++)
+                        //{
+                        //    Rigidbody B = RigidbodyStorage.objectList.ElementAt(j).Key;
 
 
-                        }
+                        //}
                         A.CalculateForce();
                         A.RecalculateAABB();
                         A.Update(dt);
@@ -179,7 +191,7 @@ namespace AABB_Collisions
             {
                 if (selectedShape != null)
                 {
-                    RigidbodyStorage.objectList.Remove(selectedShape);
+                    RigidbodyStorage.Delete(selectedShape);
                     selectedShape = null;
                 }
             }
@@ -194,6 +206,11 @@ namespace AABB_Collisions
                         isInside = true;
                         break;
                     }
+                }
+
+                if (Input.IsHeld(Keys.LeftShift))
+                {
+                    isInside = false;
                 }
 
                 if (!isInside && Input.IsPressed(MouseButton.LeftButton))

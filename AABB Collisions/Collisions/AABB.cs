@@ -13,6 +13,13 @@ namespace AABB_Collisions
         // Max is bottom right
         public Vector2 max;
 
+        public Vector2 TopLeft => new Vector2(min.X, min.Y);
+        public Vector2 TopRight => new Vector2(max.X, min.Y);
+        public Vector2 BottomLeft => new Vector2(min.X, max.Y);
+        public Vector2 BottomRight => new Vector2(max.X, max.Y);
+
+        public Rigidbody owner;
+
         public AABB(Vector2 min, Vector2 max)
         {
             this.min = min;
@@ -30,6 +37,12 @@ namespace AABB_Collisions
         {
             return (vec2.X > min.X && vec2.X < max.X && vec2.Y > min.Y && vec2.Y < max.Y);
         }
+
+        public bool Intersects(AABB b)
+        {
+            return (min.X <= b.max.X && max.X >= b.min.X) && (min.Y <= b.max.Y && max.Y >= b.min.Y);
+        }
+
         /// <summary>
         /// Returns whether or not the given Vector2 is within the AABB of a circle
         /// </summary>
