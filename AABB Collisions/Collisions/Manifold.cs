@@ -19,10 +19,10 @@ namespace AABB_Collisions
         static Func<Manifold, bool>[][] collisionMethods = new Func<Manifold, bool>[2][]
         {
                 new Func<Manifold, bool>[]{
-                    CollisionUtil.CircleVsCircle, CollisionUtil.AABBvsCircle
+                    CollisionUtil.CirclevsCircle, CollisionUtil.RectvsCircle
                 },
                 new Func<Manifold, bool>[]{
-                    CollisionUtil.CirclevsAABB, CollisionUtil.AABBvsAABB
+                    CollisionUtil.CirclevsRect, CollisionUtil.RectvsRect
                 },
         };
 
@@ -64,11 +64,15 @@ namespace AABB_Collisions
         /// </summary>
         public void PositionalCorrection()
         {
-            const float percentage = 0.6f; // Penetration percentage to correct
-            const float slop = 0f;
-            Extensions.Vector2Normalise(normal, out normal);
+            if (objectA == Game1.instance.selectedShape || objectB == Game1.instance.selectedShape)
+            {
 
-            Vector2 correction = new Vector2(0, Math.Max(penetration - slop, 0.0f) / (objectA.massData.inverseMass + objectB.massData.inverseMass)) * percentage * normal;
+            }
+            const float percentage = 0.2f; // Penetration percentage to correct
+            const float slop = 1f;
+            Extensions.Vector2Normalise(normal, out normal);
+            float fcorr = Math.Max(penetration - slop, 0.0f) / (objectA.massData.inverseMass + objectB.massData.inverseMass);
+            Vector2 correction = new Vector2(fcorr, fcorr) * percentage * normal;
             objectA.pos += objectA.massData.inverseMass * correction;
             objectB.pos -= objectB.massData.inverseMass * correction;
         }

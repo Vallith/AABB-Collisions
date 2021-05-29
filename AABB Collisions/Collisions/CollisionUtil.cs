@@ -7,13 +7,10 @@ namespace AABB_Collisions
 {
     public static class CollisionUtil
     {
-
-        // This is called when the program loops over every object and decides to test a collision, and only THEN is the Manifold generated between
-        // 2 potentially colliding objects.
         /// <summary>
         /// Narrow phase collision between a Circle and a Circle
         /// </summary>
-        public static bool CircleVsCircle(Manifold m)
+        public static bool CirclevsCircle(Manifold m)
         {
             Circle a = (Circle)m.objectA;
             Circle b = (Circle)m.objectB;
@@ -49,14 +46,13 @@ namespace AABB_Collisions
                 m.normal = new Vector2(1, 0);
                 return true;
             }
-
         }
 
         // RigidRect will eventually become Polygon
         /// <summary>
         /// Narrow phase collision between a RigidRect and a RigidRect
         /// </summary>
-        public static bool AABBvsAABB(Manifold m)
+        public static bool RectvsRect(Manifold m)
         {
             //Console.WriteLine("AABBvsAABB");
             RigidRect a = (RigidRect)m.objectA;
@@ -117,14 +113,14 @@ namespace AABB_Collisions
         }
 
         /// <summary>
-        /// Narrow phase collision between a Circle and a RigidRect
+        /// Narrow phase collision between Circle and RigidRect
         /// </summary>
-        public static bool CirclevsAABB(Manifold m)
+        public static bool CirclevsRect(Manifold m)
         {
             Rigidbody temp = m.objectA;
             m.objectA = m.objectB;
             m.objectB = temp;
-            bool result = AABBvsCircle(m);
+            bool result = RectvsCircle(m);
 
             temp = m.objectA;
             m.objectA = m.objectB;
@@ -138,17 +134,15 @@ namespace AABB_Collisions
         }
 
         /// <summary>
-        /// Reverses manifold objects for narrow phase collision between a Circle and a RigidRect
+        /// Narrow phase collision between a RigidRect and a Circle
         /// </summary>
-        public static bool AABBvsCircle(Manifold m)
+        public static bool RectvsCircle(Manifold m)
         {
-            //Console.WriteLine("AABBvsCircle");
             RigidRect a = (RigidRect)m.objectB;
             Circle b = (Circle)m.objectA;
 
             // Vector from A to B
             Vector2 n = b.pos - a.pos;
-
             // Closest point on A to center of B
             Vector2 closest = n;
 
@@ -160,6 +154,8 @@ namespace AABB_Collisions
             closest.X = Math.Clamp(closest.X, -xExtentA, xExtentA);
             closest.Y = Math.Clamp(closest.Y, -yExtentA, yExtentA);
 
+            //DrawQueue.Add(DrawLine.Create(b.pos, a.pos,Color.White));
+            //DrawQueue.Add(DrawPoint.Create(closest + a.pos, Color.Sienna));
             bool inside = false;
 
             // Circle is inside the AABB, so we need to clamp
@@ -168,8 +164,11 @@ namespace AABB_Collisions
             {
                 inside = true;
 
+                //Draw circle around our circle if it is inside AABB
+                //DrawQueue.Add(DrawCircle.Create(b.pos,b.radius, Color.LawnGreen));
+
                 // Find closest axis
-                if(Math.Abs(n.X) > Math.Abs(n.Y))
+                if (Math.Abs(n.X) > Math.Abs(n.Y))
                 {
                     // Clamp to closest extent
                     if (closest.X > 0)
@@ -200,24 +199,32 @@ namespace AABB_Collisions
 
             dist = (float)Math.Sqrt(dist);
 
+            Vector2 diff = a.pos + closest - b.pos;
+
             // Collision normal needs to be flipped to point outside
             // if the circle was inside the AABB
             if (inside)
             {
                 m.normal = -normal;
-                m.penetration = r - dist;
             }
             else
             {
                 m.normal = normal;
-                m.penetration = r - dist;
             }
+
+            m.penetration = b.radius - diff.Length();
+
             Extensions.Vector2Normalise(m.normal, out m.normal);
+
+            //Draw debug normals and penetration vectors ( ͡° ͜ʖ ͡°) 
+            //DrawQueue.Add(DrawLine.Create(closest + a.pos, closest + a.pos + m.normal * 30, Color.BlueViolet));
+            //DrawQueue.Add(DrawLine.Create(closest + a.pos, closest + a.pos + -m.normal * m.penetration, Color.Red));
+
             return true;
         }
 
         /// <summary>
-        /// Calculates impulse to apply to 2 objects which are colliding
+        /// Calculates impulse to apply to the 2 objects which are colliding
         /// </summary>
         public static void ResolveCollision(Manifold m)
         {

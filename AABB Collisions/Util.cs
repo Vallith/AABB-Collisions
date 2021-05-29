@@ -74,5 +74,21 @@ namespace AABB_Collisions
         {
             return start2 + (value - start1) * (end2 - start2) / (end - start1);
         }
+
+        public static bool GetArg(out string result, string arg, List<string> args, string def = "")
+        {
+            //Don't allow last element because i + 1
+            for (int i = 0; i < args.Count - 1; i++)
+            {
+                if (args[i].Contains(arg))
+                {
+                    result = args[i + 1];
+                    return true;
+                }
+            }
+
+            result = def;
+            return false;
+        }
     }
 }

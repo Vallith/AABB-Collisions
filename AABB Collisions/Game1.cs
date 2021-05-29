@@ -55,6 +55,7 @@ namespace AABB_Collisions
         public RigidRect leftWall;
         public RigidRect rightWall;
         public RigidRect ground;
+        public RigidRect plat;
         public RigidRect roof;
 
         // Currently selected object
@@ -77,11 +78,18 @@ namespace AABB_Collisions
         protected override void Initialize()
         {
             AllocConsole();
-            Screen.width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            Screen.height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //Screen.width = 1600;
-            //Screen.height = 1600;
-            Screen.Initialise();
+
+            List<string> args = System.Environment.GetCommandLineArgs().ToList();
+            string arg;
+            // Set the resolution using commandline args eg. -w 2560 -h 1440 (via console or through Project>Properties>Debug>Applicaition Arguments)
+            // Defaults to monitor resolution
+            Util.GetArg(out arg, "-w", args, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width.ToString());
+            Screen.width = int.Parse(arg);
+            Util.GetArg(out arg, "-h", args, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height.ToString());
+            Screen.height = int.Parse(arg);
+
+            //Do we have a -f arg if so use fullscreen
+            Screen.Initialise(args.Contains("-f"));
 
             drawAABBs = new RadioButton(new Vector2(26, 30), 15, 2);
             drawVelocityVectors = new RadioButton(new Vector2(26, 80), 15, 2);
@@ -92,12 +100,13 @@ namespace AABB_Collisions
             boxHeight = new Slider(new Vector2(90, 180), 10, 100, 10, 200, true);
             boxWidth = new Slider(new Vector2(90, 240), 10, 100, 10, 200, true);
 
+            //Spawn a platform at the centre of the sceene width a 2/3 width and height of the screen
+            plat = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.HalfHeight), (int)Screen.HalfWidth * 0.66f, (int)Screen.HalfHeight * 0.66f, 0, Mats["Static"], new Color(145, 136, 129)), "Plat");
+
             leftWall = RigidbodyStorage.Create(new RigidRect(new Vector2(halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Left Wall");
             rightWall = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.width - halfWallWidth, Screen.HalfHeight), wallWidth, Screen.height, 0, Mats["Static"], new Color(145, 136, 129)), "Right Wall");
             ground = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, Screen.height - halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Ground");
             roof = RigidbodyStorage.Create(new RigidRect(new Vector2(Screen.HalfWidth, halfWallWidth), Screen.width, wallWidth, 0, Mats["Static"], new Color(145, 136, 129)), "Roof");
-
-            //SAP.Generate();
 
             base.Initialize();
         }
@@ -111,7 +120,6 @@ namespace AABB_Collisions
         public int collisionCount;
         protected override void Update(GameTime gameTime)
         {
-            _spriteBatch.Begin();
             Input.Process();
             Screen.TestUIElement();
 
@@ -223,18 +231,17 @@ namespace AABB_Collisions
                 }
             }
 
-            DrawGame(gameTime);
+            //DrawGame(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            _spriteBatch.End();
-
-
 
             base.Update(gameTime);
         }
-        protected void DrawGame(GameTime gameTime)
+
+        protected override void Draw(GameTime gameTime)
         {
+            _spriteBatch.Begin();
             GraphicsDevice.Clear(new Color(111, 177, 199));
 
             foreach (var element in RigidbodyStorage.objectList)
@@ -274,6 +281,8 @@ namespace AABB_Collisions
             _spriteBatch.DrawString(defaultFont, $"RB Count: {RigidbodyStorage.objectList.Count}", new Vector2(75, 40), Color.Black);
             _spriteBatch.DrawString(defaultFont, $"Collision Count: {collisionCount}", new Vector2(75, 60), Color.Black);
             collisionCount = 0;
+            DrawQueue.DrawAll();
+            _spriteBatch.End();
         }
 
 
